@@ -12,6 +12,9 @@ LEAD_INFO_LABELS = {
   LeadInfoMode.SPEED: "Speed",
 }
 
+SPEEDOMETER_SOURCE_LABELS = ["Off", "CAN", "GPS", "Both"]
+EU_SIGN_BLEND_LABELS = ["Simple", "Full"]
+
 
 class CameraViewBigButton(BigButton):
   def __init__(self):
@@ -89,6 +92,68 @@ class LeadInfoBigButton(BigButton):
     gui_app.push_widget(dialog)
 
 
+class SpeedometerSourceBigButton(BigButton):
+  def __init__(self):
+    super().__init__("speedometer source", "", gui_app.texture("icons_mici/onroad/eye_fill.png", 64, 64))
+    self._params = Params()
+    self.set_click_callback(self._show_selector)
+    self.refresh()
+
+  def refresh(self):
+    current_idx = self._params.get_int("SpeedometerSource", return_default=True, default=1)
+    current_idx = max(0, min(current_idx, len(SPEEDOMETER_SOURCE_LABELS) - 1))
+    self.set_value(SPEEDOMETER_SOURCE_LABELS[current_idx].lower())
+
+  def _show_selector(self):
+    current_idx = self._params.get_int("SpeedometerSource", return_default=True, default=1)
+    current_idx = max(0, min(current_idx, len(SPEEDOMETER_SOURCE_LABELS) - 1))
+    dialog_holder: dict[str, BigMultiOptionDialog] = {}
+
+    def on_confirm():
+      try:
+        idx = SPEEDOMETER_SOURCE_LABELS.index(dialog_holder["dialog"].get_selected_option())
+      except ValueError:
+        gui_app.push_widget(BigDialog("", "Invalid speedometer source"))
+        return
+      self._params.put_int("SpeedometerSource", idx)
+      self.refresh()
+
+    dialog = BigMultiOptionDialog(options=SPEEDOMETER_SOURCE_LABELS, default=SPEEDOMETER_SOURCE_LABELS[current_idx], right_btn_callback=on_confirm)
+    dialog_holder["dialog"] = dialog
+    gui_app.push_widget(dialog)
+
+
+class EuSignBlendBigButton(BigButton):
+  def __init__(self):
+    super().__init__("speed limit sign blend", "", gui_app.texture("icons_mici/onroad/eye_fill.png", 64, 64))
+    self._params = Params()
+    self.set_click_callback(self._show_selector)
+    self.refresh()
+
+  def refresh(self):
+    current_idx = self._params.get_int("EuSignBlendStyle", return_default=True, default=0)
+    current_idx = max(0, min(current_idx, len(EU_SIGN_BLEND_LABELS) - 1))
+    self.set_value(EU_SIGN_BLEND_LABELS[current_idx].lower())
+
+  def _show_selector(self):
+    current_idx = self._params.get_int("EuSignBlendStyle", return_default=True, default=0)
+    current_idx = max(0, min(current_idx, len(EU_SIGN_BLEND_LABELS) - 1))
+    dialog_holder: dict[str, BigMultiOptionDialog] = {}
+
+    def on_confirm():
+      try:
+        idx = EU_SIGN_BLEND_LABELS.index(dialog_holder["dialog"].get_selected_option())
+      except ValueError:
+        gui_app.push_widget(BigDialog("", "Invalid sign blend style"))
+        return
+      self._params.put_int("EuSignBlendStyle", idx)
+      self.refresh()
+
+    dialog = BigMultiOptionDialog(options=EU_SIGN_BLEND_LABELS, default=EU_SIGN_BLEND_LABELS[current_idx], right_btn_callback=on_confirm)
+    dialog_holder["dialog"] = dialog
+    gui_app.push_widget(dialog)
+
+
 class VisualsLayoutMici(NavScroller):
   def __init__(self):
     super().__init__()
@@ -100,7 +165,10 @@ class VisualsLayoutMici(NavScroller):
     self._rainbow_path_btn = BigParamControl("rainbow road", "RainbowPath")
     self._lead_indicator_btn = LeadIndicatorBigButton()
     self._lead_info_btn = LeadInfoBigButton()
+    self._speedometer_source_btn = SpeedometerSourceBigButton()
     self._speed_limit_signs_btn = BigParamControl("show speed limits", "ShowSpeedLimits")
+    self._vienna_signs_btn = BigParamControl("vienna style signs", "UseVienna")
+    self._eu_sign_blend_btn = EuSignBlendBigButton()
     self._slc_confirmation_btn = BigParamControl("confirm new speed limits", "SLCConfirmation")
     self._slc_confirmation_lower_btn = BigParamControl("confirm lower limits", "SLCConfirmationLower")
     self._slc_confirmation_higher_btn = BigParamControl("confirm higher limits", "SLCConfirmationHigher")
@@ -114,7 +182,10 @@ class VisualsLayoutMici(NavScroller):
       self._rainbow_path_btn,
       self._lead_indicator_btn,
       self._lead_info_btn,
+      self._speedometer_source_btn,
       self._speed_limit_signs_btn,
+      self._vienna_signs_btn,
+      self._eu_sign_blend_btn,
       self._slc_confirmation_btn,
       self._slc_confirmation_lower_btn,
       self._slc_confirmation_higher_btn,
@@ -133,6 +204,11 @@ class VisualsLayoutMici(NavScroller):
     self._lead_indicator_btn.refresh()
     self._lead_info_btn.refresh()
     self._lead_info_btn.set_enabled(lead_indicator_enabled(self._lead_info_btn.params, hide_by_default=True))
+    self._speedometer_source_btn.refresh()
+    self._eu_sign_blend_btn.refresh()
+    speed_limits_enabled = self._speed_limit_signs_btn.params.get_bool("ShowSpeedLimits")
+    self._vienna_signs_btn.set_visible(speed_limits_enabled)
+    self._eu_sign_blend_btn.set_visible(speed_limits_enabled and self._vienna_signs_btn.params.get_bool("UseVienna"))
     confirmation_enabled = self._slc_confirmation_btn.params.get_bool("SLCConfirmation")
     self._slc_confirmation_lower_btn.set_visible(confirmation_enabled)
     self._slc_confirmation_higher_btn.set_visible(confirmation_enabled)
