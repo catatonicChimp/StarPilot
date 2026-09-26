@@ -17,7 +17,7 @@ class CarState(CarStateBase):
     self.frame = 0
     self.eps_init_complete = False
     self.tsk_recovery_timer = 0
-    self.stock_acc_lead_index = None
+    self.stock_acc_lead_index = 0
     self.stock_acc_follow_accel = None
     self.CCP = CarControllerParams(CP)
     self.button_states = {button.event_type: False for button in self.CCP.BUTTONS}
