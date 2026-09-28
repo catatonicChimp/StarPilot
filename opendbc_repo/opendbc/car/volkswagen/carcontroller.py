@@ -61,6 +61,11 @@ class CarController(CarControllerBase):
     self.gra_acc_counter_last = None
     self.hca_mitigation = HCAMitigation(self.CCP)
 
+  def gas_override(self, CS, CC):
+    # Engaged, but longitudinal is released to the driver's gas pedal. MQB only: panda safety permits the
+    # zero-accel ACC_OVERRIDE frame for MQB, not PQ or MLB.
+    return self.CCS == mqbcan and CC.enabled and not CC.longActive and CS.out.gasPressed
+
   def update(self, CC, CS, now_nanos):
     _projection = self.learning_projection_observer
     if _projection is not None:
@@ -154,7 +159,9 @@ class CarController(CarControllerBase):
 
         else:
           stopping = actuators.longControlState == LongCtrlState.stopping
-          acc_control = self.CCS.acc_control_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive)
+          acc_control = self.CCS.acc_control_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
+                                                   self.gas_override(CS, CC))
+          # Zero when not active: also the only request besides inactive that panda allows during gas override
           accel = float(np.clip(actuators.accel, self.CCP.ACCEL_MIN, min(ACCEL_MAX_TAKEOFF, 3.0)) if CC.longActive else 0)
           starting = actuators.longControlState == LongCtrlState.pid and (CS.esp_hold_confirmation or CS.out.vEgo < 0.25)
           can_sends.extend(self.CCS.create_acc_accel_control(self.packer_pt, self.CAN.pt, CS.acc_type, CC.longActive, accel,
@@ -199,7 +206,8 @@ class CarController(CarControllerBase):
             lead_distance = CS.stock_acc_lead_index
           else:
             lead_distance = 512 if CS.upscale_lead_car_signal else 8
-        acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive)
+        acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
+                                                       self.gas_override(CS, CC))
         # FIXME: PQ may need to use the on-the-wire mph/kmh toggle to fix rounding errors
         # FIXME: Detect clusters with vEgoCluster offsets and apply an identical vCruiseCluster offset
         set_speed = hud_control.setSpeed * CV.MS_TO_KPH
