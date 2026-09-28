@@ -11,11 +11,6 @@ VisualAlert = structs.CarControl.HUDControl.VisualAlert
 LongCtrlState = structs.CarControl.Actuators.LongControlState
 
 
-def gas_override(CS, CC):
-  # Engaged, but longitudinal is released to the driver's gas pedal
-  return CC.enabled and not CC.longActive and CS.out.gasPressed
-
-
 class CarController(CarControllerBase):
   def __init__(self, dbc_names, CP):
     super().__init__(dbc_names, CP)
@@ -139,8 +134,7 @@ class CarController(CarControllerBase):
                                                            accel, acc_status, acc_hold_type, braking_to_stop,
                                                            CS.out.vEgoRaw * CV.MS_TO_KPH, CS.travel_assist_available))
         else:
-          acc_control = self.CCS.acc_control_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
-                                                   gas_override(CS, CC))
+          acc_control = self.CCS.acc_control_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive)
           accel = float(np.clip(actuators.accel, self.CCP.ACCEL_MIN, self.CCP.ACCEL_MAX) if CC.longActive else 0)
           stopping = actuators.longControlState == LongCtrlState.stopping
           starting = actuators.longControlState == LongCtrlState.pid and (CS.esp_hold_confirmation or CS.out.vEgo < starpilot_toggles.vEgoStopping)
@@ -182,8 +176,7 @@ class CarController(CarControllerBase):
             lead_distance = CS.stock_acc_lead_index
           else:
             lead_distance = 512 if CS.upscale_lead_car_signal else 8
-        acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
-                                                       gas_override(CS, CC))
+        acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive)
         # FIXME: PQ may need to use the on-the-wire mph/kmh toggle to fix rounding errors
         # FIXME: Detect clusters with vEgoCluster offsets and apply an identical vCruiseCluster offset
         set_speed = hud_control.setSpeed * CV.MS_TO_KPH
