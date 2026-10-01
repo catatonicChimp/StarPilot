@@ -183,9 +183,8 @@ class CarController(CarControllerBase):
       else:
         lead_distance = 0
         if hud_control.leadVisible and self.frame * DT_CTRL > 1.0:  # Don't display lead until we know the scaling factor
-          if 0 < CS.stock_acc_lead_index < 1022:
-            # Radar's own icon position (gateway installs), already in this cluster's native scale
-            lead_distance = CS.stock_acc_lead_index
+          if CS.upscale_lead_car_signal and hud_control.leadDistanceRatio > 0:
+            lead_distance = mqbcan.lead_icon_position(hud_control.leadDistanceRatio, CS.out.standstill)
           else:
             lead_distance = 512 if CS.upscale_lead_car_signal else 8
         acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
