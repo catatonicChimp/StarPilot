@@ -868,9 +868,8 @@ class Controls:
     hudControl.leadVisible = self.sm['longitudinalPlan'].hasLead
     hudControl.leadDistanceBars = self.sm['selfdriveState'].personality.raw + 1
     lead_one = self.sm['radarState'].leadOne
-    desired_follow_distance = self.sm['starpilotPlan'].desiredFollowDistance
-    if hudControl.leadVisible and lead_one.status and desired_follow_distance > 0:
-      hudControl.leadDistanceRatio = float(lead_one.dRel / desired_follow_distance)
+    if hudControl.leadVisible and lead_one.status:
+      hudControl.leadDistance = float(lead_one.dRel)
     hudControl.visualAlert = self.sm['selfdriveState'].alertHudVisual
 
     hudControl.rightLaneVisible = True
