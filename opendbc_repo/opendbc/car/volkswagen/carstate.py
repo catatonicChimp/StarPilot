@@ -19,7 +19,6 @@ class CarState(CarStateBase):
     self.eps_init_complete = False
     self.tsk_recovery_timer = 0
     self.hca_autostop_timer = 0
-    self.stock_acc_lead_index = 0
     self.CCP = CarControllerParams(CP)
     self.button_states = {button.event_type: False for button in self.CCP.BUTTONS}
     self.esp_hold_confirmation = False
@@ -156,8 +155,7 @@ class CarState(CarStateBase):
     # With the gateway harness, the camera-side bus carries the radar's own ACC messages untouched
     # (openpilot longitudinal replaces ACC_02/ACC_07 on the gateway side only)
     if self.CP.networkLocation == NetworkLocation.gateway:
-      self.stock_acc_lead_index = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
-      fp_ret.stockAccLeadIndex = self.stock_acc_lead_index
+      fp_ret.stockAccLeadIndex = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
       fp_ret.stockAccFollowAccel = cam_cp.vl["ACC_07"]["ACC_Folgebeschl"]
 
     return ret, fp_ret
