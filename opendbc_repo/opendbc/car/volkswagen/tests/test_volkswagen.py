@@ -1,12 +1,14 @@
 import random
 import re
 import unittest
+from types import SimpleNamespace
 
 from opendbc.can import CANPacker, CANParser
 from opendbc.car import Bus, DT_CTRL, structs
 from opendbc.car.structs import CarParams
 from opendbc.car.fw_versions import match_fw_to_car, match_fw_to_car_exact
 from opendbc.car.vin import VIN_UNKNOWN
+from opendbc.car.volkswagen import mqbcan
 from opendbc.car.volkswagen.carcontroller import CarController, HCAMitigation
 from opendbc.car.volkswagen.carstate import CarState
 from opendbc.car.volkswagen.interface import CarInterface
@@ -225,3 +227,36 @@ class TestVolkswagenPlatformConfigs(unittest.TestCase):
 
                 expected_matches = {platform} if should_match else set()
                 assert expected_matches == matches, "Bad match"
+
+
+class TestVolkswagenMqbLeadIcon(unittest.TestCase):
+  def test_position_scale(self):
+    self.assertEqual(mqbcan.lead_icon_position(1.0, False), 100)
+    self.assertEqual(mqbcan.lead_icon_position(0.5, False), 34)  # closer than the set gap: floor
+    self.assertEqual(mqbcan.lead_icon_position(20.0, False), 1021)
+    self.assertTrue(100 < mqbcan.lead_icon_position(1.3, False) < mqbcan.lead_icon_position(1.8, False) < 1021)
+
+  def test_standstill_not_shown_as_too_close(self):
+    self.assertEqual(mqbcan.lead_icon_position(0.85, True), 101)
+    self.assertEqual(mqbcan.lead_icon_position(1.5, True), mqbcan.lead_icon_position(1.5, False))
+
+  @staticmethod
+  def _sent_lead_distance(lead_visible, ratio, upscale=True):
+    CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], True, False, False)
+    controller = CarController(DBC[CP.carFingerprint], CP)
+    controller.frame = controller.CCP.ACC_HUD_STEP * 200  # a frame that sends ACC_02, after the 1 s display delay
+    CS = SimpleNamespace(out=SimpleNamespace(gasPressed=False, standstill=False, cruiseState=SimpleNamespace(available=True),
+                                             accFaulted=False, steeringPressed=False, steeringTorque=0.0, vEgo=10.0, vEgoRaw=10.0),
+                         upscale_lead_car_signal=upscale, ldw_stock_values={}, gra_stock_values={"COUNTER": 0},
+                         acc_type=0, esp_hold_confirmation=False, eps_stock_values={}, stock_acc_lead_index=0)
+    CC = structs.CarControl(enabled=True, longActive=True)
+    CC.hudControl.leadVisible = lead_visible
+    CC.hudControl.leadDistanceRatio = ratio
+    sent = [d for addr, d, bus in controller.update(CC.as_reader(), CS, 0)[1] if addr == 0x30C]
+    return (int.from_bytes(bytes(sent[0]), 'little') >> 24) & 0x3FF
+
+  def test_hud_uses_openpilot_lead(self):
+    self.assertEqual(self._sent_lead_distance(True, 1.0), 100)
+    self.assertEqual(self._sent_lead_distance(True, 0.0), 512)  # no ratio: fixed position as before
+    self.assertEqual(self._sent_lead_distance(False, 1.0), 0)
+    self.assertEqual(self._sent_lead_distance(True, 1.0, upscale=False), 8)  # analogue cluster scale unknown: unchanged
