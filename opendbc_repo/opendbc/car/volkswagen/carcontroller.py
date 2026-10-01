@@ -60,11 +60,15 @@ class CarController(CarControllerBase):
     self.distance_bar_frame = 0
     self.gra_acc_counter_last = None
     self.hca_mitigation = HCAMitigation(self.CCP)
+    self.gas_override = False
 
-  def gas_override(self, CS, CC):
+  def update_gas_override(self, CS, CC):
     # Engaged, but longitudinal is released to the driver's gas pedal. MQB only: panda safety permits the
     # zero-accel ACC_OVERRIDE frame for MQB, not PQ or MLB.
-    return self.CCS == mqbcan and CC.enabled and not CC.longActive and CS.out.gasPressed
+    # Hold override until longActive returns: longActive lags gasPressed by a frame on release, and a single
+    # frame of ACC_STANDBY between ACC_OVERRIDE and ACC_ACTIVE drops TSK_06 to standby, which then latches
+    # a fault 0.5s later when we keep sending ACC_ACTIVE (routes 0000003c, 0000003d).
+    self.gas_override = self.CCS == mqbcan and CC.enabled and not CC.longActive and (CS.out.gasPressed or self.gas_override)
 
   def update(self, CC, CS, now_nanos):
     _projection = self.learning_projection_observer
@@ -73,6 +77,7 @@ class CarController(CarControllerBase):
     actuators = CC.actuators
     hud_control = CC.hudControl
     can_sends = []
+    self.update_gas_override(CS, CC)
 
     # **** Steering Controls ************************************************ #
 
@@ -160,7 +165,7 @@ class CarController(CarControllerBase):
         else:
           stopping = actuators.longControlState == LongCtrlState.stopping
           acc_control = self.CCS.acc_control_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
-                                                   self.gas_override(CS, CC))
+                                                   self.gas_override)
           # Zero when not active: also the only request besides inactive that panda allows during gas override
           accel = float(np.clip(actuators.accel, self.CCP.ACCEL_MIN, min(ACCEL_MAX_TAKEOFF, 3.0)) if CC.longActive else 0)
           starting = actuators.longControlState == LongCtrlState.pid and (CS.esp_hold_confirmation or CS.out.vEgo < 0.25)
@@ -203,7 +208,7 @@ class CarController(CarControllerBase):
         if hud_control.leadVisible and self.frame * DT_CTRL > 1.0:  # Don't display lead until we know the scaling factor
           lead_distance = 512 if CS.upscale_lead_car_signal else 8
         acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
-                                                       self.gas_override(CS, CC))
+                                                       self.gas_override)
         # FIXME: PQ may need to use the on-the-wire mph/kmh toggle to fix rounding errors
         # FIXME: Detect clusters with vEgoCluster offsets and apply an identical vCruiseCluster offset
         set_speed = hud_control.setSpeed * CV.MS_TO_KPH
