@@ -206,32 +206,40 @@ class TestVolkswagenMqbGasOverride:
 
 class TestVolkswagenMqbLeadIcon:
   def test_position_scale(self):
-    assert mqbcan.lead_icon_position(1.0, False) == 100
-    assert mqbcan.lead_icon_position(0.5, False) == 34  # closer than the set gap: floor
-    assert mqbcan.lead_icon_position(20.0, False) == 1021
-    assert 100 < mqbcan.lead_icon_position(1.3, False) < mqbcan.lead_icon_position(1.8, False) < 1021
+    # Close and stopped reads as near as the radar shows it, far reads at or near the radar's maximum
+    assert mqbcan.lead_icon_position(0.0, 0.0) == 101
+    assert 900 <= mqbcan.lead_icon_position(150.0, 30.0) <= 972
+    # Matches the stock radar's median index on the fitted routes (within its scatter)
+    assert abs(mqbcan.lead_icon_position(17.5, 5.0) - 498) < 100
+    assert abs(mqbcan.lead_icon_position(27.5, 12.5) - 680) < 100
 
-  def test_standstill_not_shown_as_too_close(self):
-    assert mqbcan.lead_icon_position(0.85, True) == 101
-    assert mqbcan.lead_icon_position(1.5, True) == mqbcan.lead_icon_position(1.5, False)
+  def test_position_monotonic(self):
+    # Further away reads further; the same gap at a higher speed reads closer, like the stock radar
+    positions = [mqbcan.lead_icon_position(d, 15.0) for d in range(5, 80, 5)]
+    assert positions == sorted(positions)
+    assert mqbcan.lead_icon_position(20.0, 20.0) < mqbcan.lead_icon_position(20.0, 5.0)
 
   @staticmethod
-  def _sent_lead_distance(lead_visible, ratio, upscale=True):
+  def _sent_lead_distance(lead_visible, lead_distance, enabled=True, upscale=True):
     CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], True, False, False, None)
     controller = CarController(DBC[CP.carFingerprint], CP)
     controller.frame = controller.CCP.ACC_HUD_STEP * 200  # a frame that sends ACC_02, after the 1 s display delay
     CS = SimpleNamespace(out=SimpleNamespace(gasPressed=False, standstill=False, cruiseState=SimpleNamespace(available=True),
-                                             accFaulted=False, steeringPressed=False, vEgoRaw=10.0),
+                                             accFaulted=False, steeringPressed=False, vEgo=10.0, vEgoRaw=10.0),
                          upscale_lead_car_signal=upscale, ldw_stock_values={}, gra_stock_values={"COUNTER": 0},
                          acc_type=0, esp_hold_confirmation=False, eps_stock_values={})
-    CC = CarControl(enabled=True, longActive=True)
+    CC = CarControl(enabled=enabled, longActive=enabled)
     CC.hudControl.leadVisible = lead_visible
-    CC.hudControl.leadDistanceRatio = ratio
+    CC.hudControl.leadDistance = lead_distance
     sent = [d for addr, d, bus in controller.update(CC.as_reader(), CS, 0, SimpleNamespace(vEgoStopping=0.5))[1] if addr == 0x30C]
     return (int.from_bytes(bytes(sent[0]), 'little') >> 24) & 0x3FF
 
   def test_hud_uses_openpilot_lead(self):
-    assert self._sent_lead_distance(True, 1.0) == 100
-    assert self._sent_lead_distance(True, 0.0) == 512  # no ratio: fixed position as before
-    assert self._sent_lead_distance(False, 1.0) == 0
-    assert self._sent_lead_distance(True, 1.0, upscale=False) == 8  # analogue cluster scale unknown: unchanged
+    assert self._sent_lead_distance(True, 25.0) == mqbcan.lead_icon_position(25.0, 10.0)
+    assert self._sent_lead_distance(True, 0.0) == 512  # no lead distance: fixed position as before
+    assert self._sent_lead_distance(False, 25.0) == 0
+    assert self._sent_lead_distance(True, 25.0, upscale=False) == 8  # analogue cluster scale unknown: unchanged
+
+  def test_hud_lead_same_when_not_engaged(self):
+    # The icon follows the lead the same way in standby as when engaged (route 00000042 sat at 512 in standby)
+    assert self._sent_lead_distance(True, 25.0, enabled=False) == self._sent_lead_distance(True, 25.0, enabled=True)

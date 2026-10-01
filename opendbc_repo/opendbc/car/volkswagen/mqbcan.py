@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 from opendbc.car.crc import CRC8H2F
 
@@ -137,15 +137,22 @@ def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_cont
   return commands
 
 
-def lead_icon_position(distance_ratio, standstill):
-  # ACC_02.ACC_Abstandsindex on digital clusters, on the stock radar's scale (2016 Golf Mk7 fit):
-  # ~100 = lead at the set gap, log scale above it, floor of 34 when closer than the set gap.
-  # Stopped behind a car, the stock radar reports at least ~101.
-  position = 100 + 607 * math.log(distance_ratio)
-  if standstill:
-    position = max(position, 101)
-  return int(min(max(position, 34), 1021))
+# ACC_02.ACC_Abstandsindex on digital clusters, on the stock radar's scale: median of the radar's own index by lead
+# distance and ego speed on a 2016 Golf Mk7 (stock ACC routes 00000031/38/39, all under ~55 km/h, so faster speeds
+# use the last row). The radar reads the same gap as closer at higher speed; ~101 is close, 972 is far.
+LEAD_ICON_DISTANCES = [0., 5., 10., 15., 20., 25., 30., 35., 40., 50.]  # m
+LEAD_ICON_SPEEDS = [0., 5., 10., 15.]  # m/s
+LEAD_ICON_POSITIONS = [
+  [101, 142, 334, 570, 570, 634, 896, 896, 972, 972],
+  [101, 119, 188, 441, 598, 685, 774, 890, 972, 972],
+  [116, 116, 116, 274, 473, 647, 702, 905, 913, 972],
+  [101, 101, 101, 101, 460, 511, 684, 729, 791, 929],
+]
 
+
+def lead_icon_position(lead_distance, v_ego):
+  by_speed = [np.interp(lead_distance, LEAD_ICON_DISTANCES, row) for row in LEAD_ICON_POSITIONS]
+  return int(round(np.interp(v_ego, LEAD_ICON_SPEEDS, by_speed)))
 
 def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance, distance):
   values = {
