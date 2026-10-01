@@ -283,7 +283,6 @@ struct StarPilotLongitudinalPlan @0xda96579883444c35 {
   forceStopEpisodeMonoTime @6 :UInt64;
   departureAlertKind @7 :UInt8; # 0: none, 1: green-light advisory, 2: lead departing
   departureAlertMonoTime @8 :UInt64; # Original advisory model-source timestamp, ns
-  leadDistanceRatio @9 :Float32; # radar leadOne dRel / the MPC's desired follow distance (1.0 = at target), 0 = no lead
 }
 
 struct SlcState @0xa1680744031fdb2d {
