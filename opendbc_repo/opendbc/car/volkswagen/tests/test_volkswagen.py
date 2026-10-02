@@ -5,6 +5,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
+from opendbc.can.dbc import DBC as DBCParsed
 from opendbc.can.packer import CANPacker
 from opendbc.car import Bus
 from opendbc.car.structs import CarControl, CarParams
@@ -260,3 +261,34 @@ class TestVolkswagenMqbLeadIcon:
   def test_hud_lead_same_when_not_engaged(self):
     # The icon follows the lead the same way in standby as when engaged (route 00000042 sat at 512 in standby)
     assert self._sent_lead_distance(True, 25.0, enabled=False) == self._sent_lead_distance(True, 25.0, enabled=True)
+
+
+DBC_PARSED = DBCParsed('vw_mqb')
+
+
+class TestVolkswagenMqbStoppingDistance:
+  def test_matches_requested_decel(self):
+    # Stock radar on route 00000038: 0.82 m at 3.4 km/h with a -0.54 m/s^2 request
+    assert abs(mqbcan.acc_stopping_distance(3.4 / 3.6, -0.54) - 0.82) < 0.05
+    # Entering stopping while still rolling no longer asks the ESP to stop within 0.3 m (route 00000045: -3.3 m/s^2)
+    v, accel = 5.9 / 3.6, -1.17
+    distance = mqbcan.acc_stopping_distance(v, accel)
+    assert abs(v ** 2 / (2 * distance) - 1.17) < 0.01
+
+  def test_limits(self):
+    assert mqbcan.acc_stopping_distance(0., -0.55) == mqbcan.ACC_STOPPING_DISTANCE_MIN
+    assert mqbcan.acc_stopping_distance(30., -0.5) == mqbcan.ACC_STOPPING_DISTANCE_MAX
+    # A near-zero or positive request still assumes a gentle stop rather than an infinite distance
+    assert mqbcan.acc_stopping_distance(1.6, 0.2) == mqbcan.acc_stopping_distance(1.6, -mqbcan.ACC_STOPPING_DECEL_MIN)
+
+  def test_sent_only_while_stopping(self):
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+
+    def sent_distance(stopping):
+      msgs = mqbcan.create_acc_accel_control(packer, 0, 0, True, -1.0, 3, stopping, False, False, stopping_distance=1.2)
+      dat = next(m[1] for m in msgs if m[0] == 0x12E)  # ACC_07
+      sig = DBC_PARSED.name_to_msg["ACC_07"].sigs["ACC_Anhalteweg"]
+      raw = (int.from_bytes(bytes(dat), 'little') >> sig.start_bit) & ((1 << sig.size) - 1)
+      return raw * sig.factor + sig.offset
+    assert abs(sent_distance(True) - 1.2) < 0.02
+    assert abs(sent_distance(False) - mqbcan.ACC_STOPPING_DISTANCE_MAX) < 0.02
