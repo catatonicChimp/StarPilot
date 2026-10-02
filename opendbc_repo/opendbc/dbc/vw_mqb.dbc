@@ -1561,13 +1561,109 @@ BO_ 418 ESP_15: 8 XXX
  SG_ ESP_15_BZ : 8|4@1+ (1,0) [0|15] "" XXX
 
 BO_ 1122 PSD_04: 8 XXX
- SG_ PSD_Object_Index : 0|6@1+ (1,0) [0|63] "" XXX
+ SG_ PSD_Segment_ID : 0|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Vorgaenger_Segment_ID : 6|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Segmentlaenge : 12|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Strassenkategorie : 19|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Endkruemmung : 22|8@1+ (1,0) [0|254] "Unit_None"  XXX
+ SG_ PSD_Endkruemmung_Vorz : 30|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Idenditaets_ID : 31|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_ADAS_Qualitaet : 37|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_wahrscheinlichster_Pfad : 38|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Geradester_Pfad : 39|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Fahrspuren_Anzahl : 40|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Bebauung : 43|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Segment_Komplett : 44|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Rampe : 45|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Anfangskruemmung : 47|8@1+ (1,0) [0|254] ""  XXX
+ SG_ PSD_Anfangskruemmung_Vorz : 55|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Abzweigerichtung : 56|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Abzweigewinkel : 57|7@1+ (1.417323,0) [0|180.000021] ""  XXX
 
 BO_ 1123 PSD_05: 8 XXX
- SG_ PSD_Current_Route_Index : 0|6@1+ (1,0) [0|63] "" XXX
- SG_ Route_Distance_Remaining : 8|5@1+ (1,0) [0|31] "" XXX
+ SG_ PSD_Pos_Segment_ID : 0|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Pos_Segmentlaenge : 6|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Pos_Inhibitzeit : 13|5@1+ (10,0) [0|310] "Unit_MilliSecon"  XXX
+ SG_ PSD_Pos_Standort_Eindeutig : 18|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Pos_Fehler_Laengsrichtung : 19|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Pos_Fahrspur : 22|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Attribut_Segment_ID_05 : 25|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Attribut_1_ID : 31|5@1+ (1,0) [1|31] ""  XXX
+ SG_ PSD_Attribut_1_Wert : 36|4@1+ (1,0) [0|15] ""  XXX
+ SG_ PSD_Attribut_1_Offset : 40|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Attribut_2_ID : 47|5@1+ (1,0) [1|31] ""  XXX
+ SG_ PSD_Attribut_2_Wert : 52|4@1+ (1,0) [0|15] ""  XXX
+ SG_ PSD_Attribut_2_Offset : 56|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Attribute_Komplett_05 : 63|1@1+ (1,0) [0|1] ""  XXX
 
 BO_ 1124 PSD_06: 8 XXX
+ SG_ PSD_06_Mux M : 0|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Sys_Segment_ID m0 : 3|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Sys_Laendercode m0 : 9|8@1+ (1,0) [0|255] ""  XXX
+ SG_ PSD_Sys_Geschwindigkeit_Einheit m0 : 17|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Sys_Verkehrsrichtung m0 : 18|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Sys_Geometrieguete m0 : 19|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Sys_Mapmatchingguete m0 : 21|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Sys_Alter_Karte m0 : 23|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Sys_Zielfuehrung m0 : 26|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Sys_US_State m0 : 27|6@1+ (1,0) [0|63] ""  XXX
+ SG_ PSD_Sys_Quali_Geometrien m0 : 33|3@1+ (1,0) [0|7] "Unit_None"  XXX
+ SG_ PSD_Sys_Quali_Ortsinfo m0 : 36|2@1+ (1,0) [0|3] "Unit_None"  XXX
+ SG_ PSD_Sys_Quali_verfuegbar m0 : 38|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Sys_Zielfuehrung_geaendert m0 : 39|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Sys_Geometrieguete_erweitert m0 : 40|8@1+ (1,0) [0|255] ""  XXX
+ SG_ PSD_Sys_Quali_sonstige_Attribute m0 : 48|3@1+ (1,0) [0|7] "Unit_None"  XXX
+ SG_ PSD_Sys_Quali_Steigungen m0 : 51|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Sys_Quali_Strassenkennz m0 : 54|3@1+ (1,0) [0|7] "Unit_None"  XXX
+ SG_ PSD_Sys_Quali_Tempolimits m0 : 57|3@1+ (1,0) [0|7] "Unit_None"  XXX
+ SG_ PSD_Sys_Quali_Vorfahrtsregelung m0 : 60|3@1+ (1,0) [0|7] "Unit_None"  XXX
+ SG_ PSD_Attribut_Segment_ID m1 : 3|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Attribut_3_ID m1 : 9|5@1+ (1,0) [1|31] ""  XXX
+ SG_ PSD_Attribut_3_Offset m1 : 14|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Attribut_3_Wert m1 : 21|4@1+ (1,0) [0|15] ""  XXX
+ SG_ PSD_Attribut_4_ID m1 : 25|5@1+ (1,0) [1|31] ""  XXX
+ SG_ PSD_Attribut_4_Wert m1 : 30|4@1+ (1,0) [0|15] ""  XXX
+ SG_ PSD_Attribut_4_Offset m1 : 34|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Attribut_5_ID m1 : 41|5@1+ (1,0) [1|31] ""  XXX
+ SG_ PSD_Attribut_5_Offset m1 : 46|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Attribut_5_Wert m1 : 53|4@1+ (1,0) [0|15] ""  XXX
+ SG_ PSD_Attribute_Komplett_06 m1 : 57|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Ges_Segment_ID m2 : 3|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Ges_Offset m2 : 9|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Ges_Geschwindigkeit m2 : 16|5@1+ (1,0) [0|31] ""  XXX
+ SG_ PSD_Ges_Typ m2 : 21|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Spur_Geschw_Begrenzung m2 : 23|6@1+ (1,0) [0|63] ""  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Gespann m2 : 29|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Witter m2 : 31|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Tag_Anf m2 : 33|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Tag_Ende m2 : 36|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Std_Anf m2 : 39|5@1+ (1,0) [0|24] "Unit_Hours"  XXX
+ SG_ PSD_Ges_Geschwindigkeit_Std_Ende m2 : 44|5@1+ (1,0) [0|24] "Unit_Hours"  XXX
+ SG_ PSD_Ges_Ueberholverbot m2 : 49|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Wechselverkehrszeichen m2 : 51|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Wechselverkehrszeichen_Typ m2 : 54|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Gesetzlich_Kategorie m2 : 56|3@1+ (1,0) [0|7] ""  XXX
+ SG_ PSD_Ges_Gesetzlich_Zusatz m2 : 59|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Verkehrszeichen_Quelle m2 : 61|2@1+ (1,0) [0|3] ""  XXX
+ SG_ PSD_Ges_Attribute_Komplett m2 : 63|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Baum_Laenge_VZ m3 : 3|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Baum_Laenge m3 : 4|25@1+ (1e-05,0) [0|180] "Unit_DegreOfArc"  XXX
+ SG_ PSD_Baum_Breite_VZ m3 : 29|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Baum_Breite m3 : 30|24@1+ (1e-05,0) [0|90] "Unit_DegreOfArc"  XXX
+ SG_ PSD_Baum_Ausrichtung m3 : 54|10@1+ (0.3515625,0) [0|359.6484375] "Unit_DegreOfArc"  XXX
+ SG_ PSD_Steigung_1_Segment_ID m4 : 3|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Steigung_1_A_Steigung m4 : 9|7@1+ (0.12,0) [0|15] "Unit_PerCent"  XXX
+ SG_ PSD_Steigung_1_A_Vorz m4 : 16|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Steigung_1_A_Offset m4 : 17|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Steigung_1_B_Steigung m4 : 24|7@1+ (0.12,0) [0|15] "Unit_PerCent"  XXX
+ SG_ PSD_Steigung_1_B_Vorz m4 : 31|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Steigung_1_B_Offset m4 : 32|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Steigung_1_Attribute_kompl m4 : 39|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Steigung_2_Segment_ID m4 : 40|6@1+ (1,0) [2|63] ""  XXX
+ SG_ PSD_Steigung_2_Steigung m4 : 46|7@1+ (0.12,0) [0|15] "Unit_PerCent"  XXX
+ SG_ PSD_Steigung_2_Vorz m4 : 53|1@1+ (1,0) [0|1] ""  XXX
+ SG_ PSD_Steigung_2_Offset m4 : 54|7@1+ (2,0) [0|254] "Unit_Meter"  XXX
+ SG_ PSD_Steigung_2_Attribute_kompl m4 : 61|1@1+ (1,0) [0|1] ""  XXX
 
 BO_ 988 Gateway_73: 8 XXX
  SG_ UNKNOWN_1 : 15|2@0+ (1,0) [0|3] "" XXX
@@ -1655,6 +1751,10 @@ BO_ 391 Motor_EV_01: 8 Motor_MQB_BEV
  SG_ MO_HVEM_Eskalation : 54|1@1+ (1.0,0.0) [0.0|1] ""  XXX
  SG_ MO_HVEM_MaxLeistung : 55|9@1+ (50,0) [0|25450] "Unit_Watt"  XXX
 
+CM_ BO_ 1122 "Predictive route data (PSD, electronic horizon) from the navigation unit: road segments ahead. Layout from vw_meb (same VW PSD protocol); checked on a 2016 Golf Mk7 with Discover Media/Pro.";
+CM_ BO_ 1123 "Predictive route data (PSD): vehicle position on the segment tree and segment attributes with offsets.";
+CM_ SG_ 1124 PSD_Ges_Geschwindigkeit "Read the code as the lower bound of its band: 40 km/h school zones are 9 and 110 km/h freeway is 17 on a 2016 Golf Mk7 (AU). The nav map can differ from posted signs.";
+CM_ BO_ 1124 "Predictive route data (PSD), multiplexed: 0 system info, 1 more segment attributes, 2 speed limits, 3 vehicle position (lat/long, heading), 4 gradients.";
 CM_ SG_ 134 LWI_Lenkradwinkel "Steering angle WITH variable ratio effect included";
 CM_ SG_ 159 EPS_HCA_Status "Status of Heading Control Assist feature";
 CM_ SG_ 159 EPS_Lenkmoment "Steering input by driver, torque";
@@ -1888,3 +1988,73 @@ VAL_ 1720 KBI_Tankfuellstand_Prozent 126 "Init" 127 "Fehler" ;
 VAL_ 1720 KBI_Nachtanken_erkannt 0 "Geberbetrieb" 1 "Nachtankmodus" ;
 VAL_ 1720 KBI_Tankinhalt_hochaufl 16382 "Init" 16383 "Fehler" ;
 VAL_ 1720 KBI_Max_Tankinhalt 254 "Init" 255 "Fehler" ;
+VAL_ 1122 PSD_Segment_ID 0 "keine Segmentinformationen vorhanden" 1 "Fehlerwert";
+VAL_ 1122 PSD_Vorgaenger_Segment_ID 0 "keine Segmentinformation vorhanden" 1 "Fehlerwert";
+VAL_ 1122 PSD_Strassenkategorie 0 "Rest_Feldweg_Schotterweg_Privatweg" 1 "Ortsstraߥ" 2 "Kreisstraߥ" 3 "Landstraߥ" 4 "Bundesstraߥ" 5 "Autobahn" 7 "Init";
+VAL_ 1122 PSD_Endkruemmung 255 "Gerade";
+VAL_ 1122 PSD_Endkruemmung_Vorz 0 "Kruemmung_positiv" 1 "Kruemmung_negativ";
+VAL_ 1122 PSD_Idenditaets_ID 0 "keine_Segment_Informationen_vorhanden" 1 "Fehler";
+VAL_ 1122 PSD_ADAS_Qualitaet 0 "keine_ADAS_Qualitaet" 1 "ADAS_Qualitaet";
+VAL_ 1122 PSD_wahrscheinlichster_Pfad 0 "Pfad_mit_geringer_Wahrscheinlichkeit" 1 "wahrscheinlichster_Pfad";
+VAL_ 1122 PSD_Geradester_Pfad 0 "nicht_geradester_PFad" 1 "geradester_Pfad";
+VAL_ 1122 PSD_Fahrspuren_Anzahl 0 "Einbahnstrasse_in_falsche_Richtung" 1 "eine_Fahrspur" 2 "zwei_Fahrspuren" 3 "drei_Fahrspuren" 4 "vier_Fahrspuren" 5 "fuenf_Fahrspuren" 6 "sechs_Fahrspuren" 7 "mehr_als_sechs_Fahrspuren";
+VAL_ 1122 PSD_Bebauung 0 "ausserhalb_bebauten_Gebietes" 1 "innerhalb_bebauten_Gebietes";
+VAL_ 1122 PSD_Segment_Komplett 0 "Segment_Attribute_nicht_komplett" 1 "Segment_Attribute_komplett";
+VAL_ 1122 PSD_Rampe 0 "Strasse_mit_Gegenverkehr" 1 "Auffahrt_Einbahnstr" 2 "Abfahrt_Einbahnstr" 3 "Einbahnstrasse";
+VAL_ 1122 PSD_Anfangskruemmung 255 "Gerade";
+VAL_ 1122 PSD_Anfangskruemmung_Vorz 0 "positiv" 1 "negativ";
+VAL_ 1122 PSD_Abzweigerichtung 0 "rects_abzweigende_Strasse" 1 "links_abzweigende_Strasse";
+VAL_ 1123 PSD_Pos_Segment_ID 0 "keine Position gegeben" 1 "Fehlerwert";
+VAL_ 1123 PSD_Pos_Standort_Eindeutig 0 "mehrdeutiger_Standort" 1 "eindeutiger_Standort";
+VAL_ 1123 PSD_Pos_Fehler_Laengsrichtung 0 "Init" 1 "< 2m" 2 "< 5m" 3 "< 10m" 4 "< 20m" 5 "< 50m" 6 "> 50m" 7 "Off-Road";
+VAL_ 1123 PSD_Pos_Fahrspur 0 "unbekannt" 1 "Erste_Spur_von_rechts" 2 "Zweite_Spur_von_rechts" 3 "Dritte_Spur_von_rechts" 4 "Vierte_Spur_von_rechts" 5 "Fuenfte_Spur_von_rechts" 6 "Sechte_Spur_von_rechts" 7 "Siebte_oder_weitere_Spur_von_rechts";
+VAL_ 1123 PSD_Attribut_Segment_ID_05 0 "keine_Segment_Information" 1 "Fehler";
+VAL_ 1123 PSD_Attribut_1_ID 0 "keine_Information";
+VAL_ 1123 PSD_Attribut_2_ID 0 "keine_Information";
+VAL_ 1123 PSD_Attribute_Komplett_05 0 "Attribute_nicht_komplett" 1 "Attribute_komplett";
+VAL_ 1124 PSD_06_Mux 0 "Init";
+VAL_ 1124 PSD_Sys_Segment_ID 0 "keine Segmentinformationen vorhanden" 1 "nicht zulaessig";
+VAL_ 1124 PSD_Sys_Geschwindigkeit_Einheit 0 "km/h" 1 "mph";
+VAL_ 1124 PSD_Sys_Verkehrsrichtung 0 "Rechtsverkehr" 1 "Linksverkehr";
+VAL_ 1124 PSD_Sys_Geometrieguete 0 "Geringe_Guete" 1 "tbd" 2 "tbd" 3 "Hohe_Guete";
+VAL_ 1124 PSD_Sys_Mapmatchingguete 0 "geringe_Guete" 1 "res" 2 "res" 3 "hohe_Guete";
+VAL_ 1124 PSD_Sys_Alter_Karte 0 "kleiner_1_Jahr" 1 "1_Jahr" 2 "2_Jahre" 3 "3_Jahre" 4 "4_Jahre" 5 "5_Jahre" 6 "6_Jahre" 7 "groesser_7_Jahre";
+VAL_ 1124 PSD_Sys_Zielfuehrung 0 "Zielfuehrung nicht aktiv" 1 "Zielfuehrung aktiv";
+VAL_ 1124 PSD_Sys_US_State 0 "kein_US_State" 1 "Alabama" 2 "Alaska" 3 "Arkansas" 4 "Arizona" 5 "California" 6 "Colorado" 7 "Conneticut" 8 "District_of_Columbia" 9 "Delaware" 10 "Florida" 11 "Georgia" 12 "Hawaii" 13 "Idaho" 14 "Illinois" 15 "Iowa" 16 "Indiana" 17 "Kansas" 18 "Kentucky" 19 "Louisiana" 20 "Massachusetts" 21 "Maryland" 22 "Maine" 23 "Michigan" 24 "Minnesota" 25 "Missouri" 26 "Mississippi" 27 "Montana" 28 "North_Carolina" 29 "North_Dakota" 30 "Nebraska" 31 "Nevada" 32 "New_Hampshire" 33 "New_Jersey" 34 "New_Mexico" 35 "New_York" 36 "Ohio" 37 "Oklahoma" 38 "Oregon" 39 "Pennsylvania" 40 "Puerto_Rico" 41 "Rhode_Island" 42 "South_Carolina" 43 "South_Dakota" 44 "Tennessee" 45 "Texas" 46 "Utah" 47 "Virginia" 48 "Virgin_Islands" 49 "Vermont" 50 "Washington" 51 "Wisconsin" 52 "West_Virginia" 53 "Wyoming";
+VAL_ 1124 PSD_Sys_Quali_verfuegbar 0 "Qualitaetskriterien_nicht_verfuegbar" 1 "Qualitaetskriterien_verfuegbar";
+VAL_ 1124 PSD_Sys_Zielfuehrung_geaendert 0 "Zielfuehrung_nicht_geaendert" 1 "Zielfuehrung_geaendert";
+VAL_ 1124 PSD_Sys_Geometrieguete_erweitert 0 "Init";
+VAL_ 1124 PSD_Attribut_Segment_ID 0 "keine_Segment_Information_vorhanden" 1 "Fehler";
+VAL_ 1124 PSD_Attribut_3_ID 0 "keine_Information";
+VAL_ 1124 PSD_Attribut_4_ID 0 "keine_Information";
+VAL_ 1124 PSD_Attribut_5_ID 0 "keine_Information";
+VAL_ 1124 PSD_Attribute_Komplett_06 0 "Attribute_nicht_komplett" 1 "Attribute_komplett";
+VAL_ 1124 PSD_Ges_Segment_ID 0 "keine Segmentinformationen vorhanden" 1 "nicht zulaessig";
+VAL_ 1124 PSD_Ges_Geschwindigkeit 0 "Kein Geschwindigkeitsgebot" 1 "0 km/h < v_max <  5 km/h" 2 "5 km/h < v_max < 10km/h" 3 "10 km/h < v_max < 15 km/h" 4 "15 km/h < v_max < 20 km/h" 5 "20 km/h < v_max < 25 km/h" 6 "25 km/h < v_max < 30 km/h" 7 "30 km/h < v_max < 35 km/h" 8 "35 km/h < v_max < 40 km/h" 9 "40 km/h < v_max < 45 km/h" 10 "45 km/h < v_max < 50 km/h" 11 "50 km/h < v_max < 60 km/h" 12 "60 km/h < v_max < 70 km/h" 13 "70 km/h < v_max < 80 km/h" 14 "80 km/h < v_max < 90 km/h" 15 "90 km/h < v_max < 100 km/h" 16 "100 km/h < v_max < 110 km/h" 17 "110 km/h < v_max < 120 km/h" 18 "120 km/h < v_max < 130 km/h" 19 "130 km/h < v_max < 140 km/h" 20 "140 km/h < v_max < 150 km/h" 21 "150 km/h < v_max < 160 km/h" 22 "160 km/h < v_max" 23 "Geschwindigkeitsgebot aufgehoben" 24 "..0x1F ungültig";
+VAL_ 1124 PSD_Ges_Typ 0 "Geschw_Klasse_des_Kartendatensuppliers" 1 "Explizit_abgeleiteten_Begrenzung" 2 "Durch_Gesetzg_vorgeg_allgem_Gebot_fuer_uebertr_Rahmenbed" 3 "Init";
+VAL_ 1124 PSD_Ges_Spur_Geschw_Begrenzung 0 "Gebot_fuer_alle_spuren_gueltig";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Gespann 0 "alle Fahrzeuge" 1 "PKW mit Gespann" 2 "LKW, Busse, etc.";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Witter 0 "Witterungsunabh䮧ig" 1 "N䳳e, Regen, Niederschlag" 2 "Gl䴴e" 3 "Nebel";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Tag_Anf 0 "kein Beginn definiert" 1 "Montag" 2 "Dienstag" 3 "Mittwoch" 4 "Donnerstag" 5 "Freitag" 6 "Samstag" 7 "Sonntag";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Tag_Ende 0 "kein Ende definiert" 1 "Montag" 2 "Dienstag" 3 "Mittwoch" 4 "Donnerstag" 5 "Freitag" 6 "Samstag" 7 "Sonntag";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Std_Anf 25 "kein Beginn für stundenweise Einschr䮫ungen";
+VAL_ 1124 PSD_Ges_Geschwindigkeit_Std_Ende 25 "kein Ende für stundenweise Einschr䮫ungen";
+VAL_ 1124 PSD_Ges_Ueberholverbot 0 "kein ܢerholverbot" 1 "alle Fahrzeuge" 2 "ܢerholverbot für PKW mit Gespann" 3 "ܢerholverbot für LKW, Busse, etc.";
+VAL_ 1124 PSD_Ges_Wechselverkehrszeichen 0 "Kein Wechselverkehrszeichen" 1 "Wechselverkehrszeichen links" 2 "Wechselverkehrszeichen rechts" 3 "Wechselverkehrszeichen links und rechts" 4 "Wechselverkerhszeichen über der Fahrbahn";
+VAL_ 1124 PSD_Wechselverkehrszeichen_Typ 0 "kein_Wechselverkehrszeichen" 1 "LED_Wechselverkehrszeichen" 2 "nicht_LED_Wechselverkehrszeichen";
+VAL_ 1124 PSD_Ges_Gesetzlich_Kategorie 0 "kein_legales_Verbot" 1 "innerorts" 2 "ausserorts" 3 "Autobahn";
+VAL_ 1124 PSD_Ges_Gesetzlich_Zusatz 0 "kein_Zusatz_zu_legalem_Gebot" 1 "Anhaenger_Klasse_1" 2 "Anhaenger_Klasse_2";
+VAL_ 1124 PSD_Ges_Verkehrszeichen_Quelle 0 "VZA_kein_Onlinedienst" 1 "nur_VZA" 2 "nur_VZO" 3 "VZA_und_VZO";
+VAL_ 1124 PSD_Ges_Attribute_Komplett 0 "Attribute_nicht_komplett" 1 "Attribute_komplett";
+VAL_ 1124 PSD_Baum_Laenge_VZ 0 "Ost" 1 "West";
+VAL_ 1124 PSD_Baum_Breite_VZ 0 "Nord" 1 "Sued";
+VAL_ 1124 PSD_Steigung_1_Segment_ID 0 "keine_Segment_Information_vorhanden" 1 "Fehler";
+VAL_ 1124 PSD_Steigung_1_A_Steigung 126 "mehr_als_15_Prozent" 127 "Steigung_unbekannt";
+VAL_ 1124 PSD_Steigung_1_A_Vorz 0 "Gefaelle" 1 "Steigung";
+VAL_ 1124 PSD_Steigung_1_B_Steigung 126 "mehr_als_15_Prozent" 127 "Steigung_unbekannt";
+VAL_ 1124 PSD_Steigung_1_B_Vorz 0 "Gefaelle" 1 "Steigung";
+VAL_ 1124 PSD_Steigung_1_Attribute_kompl 0 "Steigungen_nicht_komplett" 1 "Steigungen_komplett";
+VAL_ 1124 PSD_Steigung_2_Segment_ID 0 "keine_Segment_Information_vorhanden" 1 "Fehler";
+VAL_ 1124 PSD_Steigung_2_Steigung 126 "mehr_als_15_Prozent" 127 "Steigung_unbekannt";
+VAL_ 1124 PSD_Steigung_2_Vorz 0 "Gefaelle" 1 "Steigung";
+VAL_ 1124 PSD_Steigung_2_Attribute_kompl 0 "Steigungen_nicht_komplett" 1 "Steigungen_komplett";
