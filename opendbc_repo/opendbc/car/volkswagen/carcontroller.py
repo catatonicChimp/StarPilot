@@ -33,6 +33,7 @@ class CarController(CarControllerBase):
     self.apply_curvature_last = 0.
     self.steering_power_last = 0
     self.accel_last = 0.
+    self.stopping_distance = None
     self.lead_distance_bars_last = None
     self.lead_icon = mqbcan.LeadIcon(self.CCP.ACC_HUD_STEP * DT_CTRL)
     self.distance_bar_frame = 0
@@ -151,7 +152,12 @@ class CarController(CarControllerBase):
           accel = float(np.clip(actuators.accel, self.CCP.ACCEL_MIN, self.CCP.ACCEL_MAX) if CC.longActive else 0)
           stopping = actuators.longControlState == LongCtrlState.stopping
           starting = actuators.longControlState == LongCtrlState.pid and (CS.esp_hold_confirmation or CS.out.vEgo < starpilot_toggles.vEgoStopping)
-          stopping_kwargs = {"stopping_distance": mqbcan.acc_stopping_distance(CS.out.vEgo, accel)} if self.CCS is mqbcan else {}
+          # Like the stock radar, set the stopping distance once when handing the stop to the ESP and hold it
+          if not stopping:
+            self.stopping_distance = None
+          elif self.stopping_distance is None:
+            self.stopping_distance = mqbcan.acc_stopping_distance(CS.out.vEgo, accel)
+          stopping_kwargs = {"stopping_distance": self.stopping_distance} if self.CCS is mqbcan and stopping else {}
           can_sends.extend(self.CCS.create_acc_accel_control(self.packer_pt, self.CAN.pt, CS.acc_type, CC.longActive, accel,
                                                              acc_control, stopping, starting, CS.esp_hold_confirmation,
                                                              **stopping_kwargs))
