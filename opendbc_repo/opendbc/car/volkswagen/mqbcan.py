@@ -92,7 +92,21 @@ def acc_hud_status_value(main_switch_on, acc_faulted, long_active, override=Fals
   return acc_control_value(main_switch_on, acc_faulted, long_active, override)
 
 
-def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_control, stopping, starting, esp_hold):
+# Once ACC_Anhalten is set the ESP brings the car to a stop within ACC_Anhalteweg. A fixed short distance makes it brake
+# hard when openpilot enters stopping while still rolling (0.3 m at 5.9 km/h gave -3.3 m/s^2 for a -1.2 request, route
+# 00000045). The stock radar sends a distance consistent with its own decel request (0.82 m at 3.4 km/h, -0.54 m/s^2).
+ACC_STOPPING_DISTANCE_MIN = 0.3  # m
+ACC_STOPPING_DISTANCE_MAX = 20.46  # m, also the inactive value
+ACC_STOPPING_DECEL_MIN = 0.5  # m/s^2, gentlest stop assumed when the request is near zero
+
+
+def acc_stopping_distance(v_ego, accel):
+  decel = max(-accel, ACC_STOPPING_DECEL_MIN)
+  return float(np.clip(v_ego ** 2 / (2 * decel), ACC_STOPPING_DISTANCE_MIN, ACC_STOPPING_DISTANCE_MAX))
+
+
+def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_control, stopping, starting, esp_hold,
+                             stopping_distance=ACC_STOPPING_DISTANCE_MIN):
   commands = []
 
   # During driver gas override (ACC_OVERRIDE) the stock radar keeps reporting an engaged ACC: engine auto-stop and
@@ -124,7 +138,7 @@ def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_cont
     acc_hold_type = 0
 
   acc_07_values = {
-    "ACC_Anhalteweg": 0.3 if stopping else 20.46,  # Distance to stop (stopping coordinator handles terminal roll-out)
+    "ACC_Anhalteweg": stopping_distance if stopping else ACC_STOPPING_DISTANCE_MAX,  # Distance the ESP stops the car in
     "ACC_Freilauf_Info": 2 if acc_enabled else 0,
     "ACC_Folgebeschl": 3.02,  # Not using secondary controller accel unless and until we understand its impact
     "ACC_Sollbeschleunigung_02": accel if acc_enabled else 3.01,
