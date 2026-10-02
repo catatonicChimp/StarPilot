@@ -12,6 +12,9 @@ ButtonType = structs.CarState.ButtonEvent.Type
 HCA_AUTOSTOP_GRACE_FRAMES = 300
 
 
+FUEL_TANK_LITRES = 50.  # Golf Mk7 front-wheel drive (4Motion / Golf R: 55 L)
+
+
 class CarState(CarStateBase):
   def __init__(self, CP, FPCP):
     super().__init__(CP, FPCP)
@@ -157,6 +160,19 @@ class CarState(CarStateBase):
     if self.CP.networkLocation == NetworkLocation.gateway:
       fp_ret.stockAccLeadIndex = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
       fp_ret.stockAccFollowAccel = cam_cp.vl["ACC_07"]["ACC_Folgebeschl"]
+
+    if not self.CP.flags & VolkswagenFlags.MLB:
+      # Rear brake lights as other drivers see them, including when openpilot longitudinal brakes without the pedal
+      # (powertrain CAN, seen by gateway installs); otherwise the brake light switch
+      fp_ret.brakeLights = bool(pt_cp.vl["Motor_14"]["MO_BLS"]) or ret.brakePressed
+      if Bus.alt in can_parsers:
+        fp_ret.brakeLights = fp_ret.brakeLights or bool(can_parsers[Bus.alt].vl["Licht_hinten_01"]["LH_Bremslicht_H_aktiv"])
+
+      # Fuel level shown by the cluster (0.01 L, used for its range estimate), as a fraction of a Golf Mk7's tank.
+      # A full tank reads ~48.5 L on a 2016 Golf Mk7. 16382/16383 (163.82 L+) are init/fault values.
+      fuel_litres = pt_cp.vl["Kombi_03"]["KBI_Tankinhalt_hochaufl"]
+      if fuel_litres < 163.8:
+        ret.fuelGauge = float(min(fuel_litres / FUEL_TANK_LITRES, 1.))
 
     # Speed limit sign read by the front camera's traffic sign recognition. Signs with a supplementary plate
     # (e.g. school zone hours) are left to other sources, since the camera can't tell whether they apply.
@@ -456,7 +472,8 @@ class CarState(CarStateBase):
 
     if not CP.flags & VolkswagenFlags.MLB:
       pt_messages += [
-        ("Blinkmodi_02", 1)  # From J519 BCM (sent at 1Hz when no lights active, 50Hz when active)
+        ("Blinkmodi_02", 1),  # From J519 BCM (sent at 1Hz when no lights active, 50Hz when active)
+        ("Kombi_03", 0),  # From J285 instrument cluster, display only: optional
       ]
     if CP.flags & VolkswagenFlags.STOCK_HCA_PRESENT:
       cam_messages += [
@@ -471,10 +488,14 @@ class CarState(CarStateBase):
         ("Kamera_SpeedLimit_01", 0),  # From R242 front camera, only on cars with sign recognition: optional
       ]
 
-    return {
+    parsers = {
       Bus.pt: CANParser(DBC[CP.carFingerprint][Bus.pt], pt_messages, CanBus(CP).pt),
       Bus.cam: CANParser(DBC[CP.carFingerprint][Bus.pt], cam_messages, CanBus(CP).cam),
     }
+    if not CP.flags & VolkswagenFlags.MLB and CP.networkLocation == NetworkLocation.gateway:
+      # Powertrain CAN: only optional display messages, so it can never cause a CAN error
+      parsers[Bus.alt] = CANParser(DBC[CP.carFingerprint][Bus.pt], [("Licht_hinten_01", 0)], CanBus(CP).aux)
+    return parsers
 
   @staticmethod
   def get_can_parsers_pq(CP):
