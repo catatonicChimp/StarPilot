@@ -2,6 +2,7 @@ import random
 import re
 from types import SimpleNamespace
 
+import numpy as np
 import pytest
 
 from opendbc.can.packer import CANPacker
@@ -206,18 +207,34 @@ class TestVolkswagenMqbGasOverride:
 
 class TestVolkswagenMqbLeadIcon:
   def test_position_scale(self):
-    # Close and stopped reads as near as the radar shows it, far reads at or near the radar's maximum
-    assert mqbcan.lead_icon_position(0.0, 0.0) == 101
-    assert 900 <= mqbcan.lead_icon_position(150.0, 30.0) <= 972
-    # Matches the stock radar's median index on the fitted routes (within its scatter)
-    assert abs(mqbcan.lead_icon_position(17.5, 5.0) - 498) < 100
-    assert abs(mqbcan.lead_icon_position(27.5, 12.5) - 680) < 100
+    # At the radar's reference gap (~4.2 m + 0.9 s) the lead reads ~101; far reads at the radar's maximum
+    assert abs(mqbcan.lead_icon_position(4.16 + 0.90 * 25., 25.) - 118) < 1
+    assert mqbcan.lead_icon_position(150., 25.) == 972
+    # Stopped behind a car is never shown as inside the gap; at speed it can be
+    assert mqbcan.lead_icon_position(2., 0.) == 101
+    assert mqbcan.lead_icon_position(10., 30.) == 34
 
   def test_position_monotonic(self):
     # Further away reads further; the same gap at a higher speed reads closer, like the stock radar
-    positions = [mqbcan.lead_icon_position(d, 15.0) for d in range(5, 80, 5)]
+    positions = [mqbcan.lead_icon_position(d, 25.) for d in range(5, 150, 5)]
     assert positions == sorted(positions)
-    assert mqbcan.lead_icon_position(20.0, 20.0) < mqbcan.lead_icon_position(20.0, 5.0)
+    assert mqbcan.lead_icon_position(40., 30.) < mqbcan.lead_icon_position(40., 15.)
+
+  def test_icon_snaps_to_notches_and_glides(self):
+    icon = mqbcan.LeadIcon(0.06)
+    first = icon.update(40., 25.)
+    assert first in mqbcan.LEAD_ICON_NOTCHES  # a new lead is placed directly on a notch
+    # Small changes in distance don't move the icon off its notch
+    for d in (39., 41., 40.5, 39.5):
+      assert icon.update(d, 25.) == first
+    # A clearly further lead moves to a further notch, easing there over a few seconds rather than jumping
+    steps = [icon.update(60., 25.) for _ in range(150)]
+    assert steps[-1] > first
+    assert steps == sorted(steps)
+    assert max(np.diff([first] + steps)) < 67 / 2  # glides, never jumps a whole notch
+    assert steps[-1] in mqbcan.LEAD_ICON_NOTCHES
+    # Losing the lead clears the icon
+    assert icon.update(0., 25.) == 0
 
   @staticmethod
   def _sent_lead_distance(lead_visible, lead_distance, enabled=True, upscale=True):
@@ -235,7 +252,7 @@ class TestVolkswagenMqbLeadIcon:
     return (int.from_bytes(bytes(sent[0]), 'little') >> 24) & 0x3FF
 
   def test_hud_uses_openpilot_lead(self):
-    assert self._sent_lead_distance(True, 25.0) == mqbcan.lead_icon_position(25.0, 10.0)
+    assert self._sent_lead_distance(True, 25.0) == mqbcan.LeadIcon(0.06).update(25.0, 10.0)
     assert self._sent_lead_distance(True, 0.0) == 512  # no lead distance: fixed position as before
     assert self._sent_lead_distance(False, 25.0) == 0
     assert self._sent_lead_distance(True, 25.0, upscale=False) == 8  # analogue cluster scale unknown: unchanged
