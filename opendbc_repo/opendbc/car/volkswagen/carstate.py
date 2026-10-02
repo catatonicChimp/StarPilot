@@ -158,6 +158,13 @@ class CarState(CarStateBase):
       fp_ret.stockAccLeadIndex = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
       fp_ret.stockAccFollowAccel = cam_cp.vl["ACC_07"]["ACC_Folgebeschl"]
 
+    # Speed limit sign read by the front camera's traffic sign recognition. Signs with a supplementary plate
+    # (e.g. school zone hours) are left to other sources, since the camera can't tell whether they apply.
+    if not self.CP.flags & VolkswagenFlags.MLB:
+      sign = cam_cp.vl["Kamera_SpeedLimit_01"]
+      if sign["Status"] == 3 and sign["SpeedLimit_1"] > 0 and not sign["SpeedLimit_1_Conditional"]:
+        fp_ret.dashboardSpeedLimit = sign["SpeedLimit_1"] * CV.KPH_TO_MS
+
     return ret, fp_ret
 
   def update_meb(self, pt_cp, cam_cp, ext_cp) -> structs.CarState:
@@ -458,6 +465,10 @@ class CarState(CarStateBase):
     if not CP.flags & VolkswagenFlags.MLB and CP.networkLocation == NetworkLocation.gateway:
       cam_messages += [
         ("ACC_07", 0),  # From J428 ACC radar, logging only: optional so it can never cause a CAN error
+      ]
+    if not CP.flags & VolkswagenFlags.MLB:
+      cam_messages += [
+        ("Kamera_SpeedLimit_01", 0),  # From R242 front camera, only on cars with sign recognition: optional
       ]
 
     return {

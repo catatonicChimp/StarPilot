@@ -1405,6 +1405,19 @@ BO_ 809 Kamera_LaneLine_NextRight: 8 XXX
  SG_ Curvature : 45|12@1+ (0.00002,-0.04096) [-0.04096|0.04094] "1/m"  XXX
  SG_ Unknown_57 : 57|7@1+ (1,0) [0|127] ""  XXX
 
+BO_ 385 Kamera_SpeedLimit_01: 8 XXX
+ SG_ Status : 2|2@1+ (1,0) [0|3] ""  XXX
+ SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
+ SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+
+BO_ 668 Kamera_SpeedLimit_02: 8 XXX
+ SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
+ SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+
 BO_ 780 ACC_02: 8 XXX
  SG_ CHECKSUM : 0|8@1+ (1,0) [0|255] ""  XXX
  SG_ COUNTER : 8|4@1+ (1,0) [0|15] ""  XXX
@@ -1673,6 +1686,13 @@ CM_ SG_ 870 Right_Turn_Exterior_Bulb_1 "Probably front";
 CM_ SG_ 870 Left_Turn_Exterior_Bulb_2 "Probably rear";
 CM_ SG_ 870 Right_Turn_Exterior_Bulb_2 "Probably rear";
 CM_ SG_ 870 Fast_Send_Rate_Active "CAN message send rate";
+CM_ BO_ 385 "Front camera traffic sign recognition, speed limit signs as shown on the cluster. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 (AU, km/h) against map speed limits. Values seen 40-60 only, so the field width/scale above 60 is assumed.";
+CM_ SG_ 385 Status "3 once a sign has been recognised, 0 before the first sign.";
+CM_ SG_ 385 SpeedLimit_1 "Main speed limit sign, 0 = none.";
+CM_ SG_ 385 SpeedLimit_2 "Probably a second sign shown alongside the first (seen as 40 with a 50 main sign, e.g. a school zone).";
+CM_ SG_ 385 SpeedLimit_1_Conditional "Probably a supplementary plate (time/condition, e.g. school zone hours) on SpeedLimit_1.";
+CM_ SG_ 385 SpeedLimit_2_Conditional "Probably a supplementary plate on SpeedLimit_2.";
+CM_ BO_ 668 "Front camera traffic sign recognition: same signs as Kamera_SpeedLimit_01 without the status bits. Undocumented (name is not from the VW matrix).";
 CM_ BO_ 806 "Front camera lane line model, own lane, left line. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 and checked against openpilot modelV2 lane lines. 12.5 Hz, no checksum/counter. An empty slot reads Offset/Heading/Curvature raw 2048/2048/2047 with Unknown_12 = 0.";
 CM_ SG_ 806 Offset "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
 CM_ SG_ 806 Heading "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
