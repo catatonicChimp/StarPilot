@@ -270,10 +270,11 @@ class TestVolkswagenMqbStoppingDistance:
   def test_matches_requested_decel(self):
     # Stock radar on route 00000038: 0.82 m at 3.4 km/h with a -0.54 m/s^2 request
     assert abs(mqbcan.acc_stopping_distance(3.4 / 3.6, -0.54) - 0.82) < 0.05
-    # Entering stopping while still rolling no longer asks the ESP to stop within 0.3 m (route 00000045: -3.3 m/s^2)
-    v, accel = 5.9 / 3.6, -1.17
-    distance = mqbcan.acc_stopping_distance(v, accel)
-    assert abs(v ** 2 / (2 * distance) - 1.17) < 0.01
+    # Entering stopping while still rolling no longer asks the ESP to stop within 0.3 m (route 00000045: -3.3 m/s^2);
+    # like the stock radar, the distance never implies more than ~1 m/s^2
+    v = 5.9 / 3.6
+    distance = mqbcan.acc_stopping_distance(v, -1.17)
+    assert abs(v ** 2 / (2 * distance) - mqbcan.ACC_STOPPING_DECEL_MAX) < 0.01
 
   def test_limits(self):
     assert mqbcan.acc_stopping_distance(0., -0.55) == mqbcan.ACC_STOPPING_DISTANCE_MIN
@@ -292,3 +293,18 @@ class TestVolkswagenMqbStoppingDistance:
       return raw * sig.factor + sig.offset
     assert abs(sent_distance(True) - 1.2) < 0.02
     assert abs(sent_distance(False) - mqbcan.ACC_STOPPING_DISTANCE_MAX) < 0.02
+
+  def test_hold_sequence_matches_stock(self):
+    # Stock radar: standby (3) while the ESP brings the car to a stop, hold request (1) once it confirms the hold,
+    # release (4) on drive off
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+    sig = DBC_PARSED.name_to_msg["ACC_07"].sigs["ACC_Anforderung_HMS"]
+
+    def hold_type(stopping, starting, esp_hold):
+      msgs = mqbcan.create_acc_accel_control(packer, 0, 0, True, -0.5, 3, stopping, starting, esp_hold)
+      dat = next(m[1] for m in msgs if m[0] == 0x12E)
+      return (int.from_bytes(bytes(dat), 'little') >> sig.start_bit) & ((1 << sig.size) - 1)
+    assert hold_type(stopping=True, starting=False, esp_hold=False) == 3
+    assert hold_type(stopping=True, starting=False, esp_hold=True) == 1
+    assert hold_type(stopping=False, starting=True, esp_hold=True) == 4
+    assert hold_type(stopping=False, starting=False, esp_hold=False) == 0
