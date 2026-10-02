@@ -34,6 +34,7 @@ class CarController(CarControllerBase):
     self.steering_power_last = 0
     self.accel_last = 0.
     self.lead_distance_bars_last = None
+    self.lead_icon = mqbcan.LeadIcon(self.CCP.ACC_HUD_STEP * DT_CTRL)
     self.distance_bar_frame = 0
     self.gra_acc_counter_last = None
     self.eps_timer_soft_disable_alert = False
@@ -182,9 +183,11 @@ class CarController(CarControllerBase):
                                                        hud_control.leadDistanceBars, show_distance_bars, lead_distance, fcw_alert))
       else:
         lead_distance = 0
-        if hud_control.leadVisible and self.frame * DT_CTRL > 1.0:  # Don't display lead until we know the scaling factor
-          if CS.upscale_lead_car_signal and hud_control.leadDistance > 0:
-            lead_distance = mqbcan.lead_icon_position(hud_control.leadDistance, CS.out.vEgo)
+        lead_visible = hud_control.leadVisible and self.frame * DT_CTRL > 1.0  # Don't display lead until we know the scaling factor
+        icon_position = self.lead_icon.update(hud_control.leadDistance if lead_visible else 0., CS.out.vEgo)
+        if lead_visible:
+          if CS.upscale_lead_car_signal and icon_position > 0:
+            lead_distance = icon_position
           else:
             lead_distance = 512 if CS.upscale_lead_car_signal else 8
         acc_hud_status = self.CCS.acc_hud_status_value(CS.out.cruiseState.available, CS.out.accFaulted, CC.longActive,
