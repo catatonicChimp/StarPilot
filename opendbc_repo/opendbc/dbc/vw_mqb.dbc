@@ -1751,6 +1751,12 @@ BO_ 391 Motor_EV_01: 8 Motor_MQB_BEV
  SG_ MO_HVEM_Eskalation : 54|1@1+ (1.0,0.0) [0.0|1] ""  XXX
  SG_ MO_HVEM_MaxLeistung : 55|9@1+ (50,0) [0|25450] "Unit_Watt"  XXX
 
+CM_ BO_ 901 "Target drive profile per system, sent when the driving profile selection (MODE button) changes. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
+CM_ SG_ 968 GE_Charisma_FahrPr "Drive profile program number. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
+CM_ SG_ 812 MO_Charisma_FahrPr "Drive profile program number. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
+CM_ SG_ 949 KL_Charisma_FahrPr "Drive profile program number. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
+CM_ SG_ 1626 BCM_Eco_Charisma_Taste "Driving profile selection (MODE) button pressed.";
+CM_ SG_ 988 GE_Fahrstufe "Selector position. 2016 Golf Mk7 DQ200: D = 8, S = 9, D shown as E with the Eco drive profile = 10, tiptronic = 14 (same values as Getriebe_11).";
 CM_ BO_ 1122 "Predictive route data (PSD, electronic horizon) from the navigation unit: road segments ahead. Layout from vw_meb (same VW PSD protocol); checked on a 2016 Golf Mk7 with Discover Media/Pro.";
 CM_ BO_ 1123 "Predictive route data (PSD): vehicle position on the segment tree and segment attributes with offsets.";
 CM_ SG_ 1123 PSD_Attribut_1_ID "Attribute type. Seen on a 2016 Golf Mk7 (AU), 49 drives: 3 = roundabout segment (value 1 where it begins/entry, 0 where it ends/exit), 10 = right of way at the junction ahead (value 8 = roundabout; 1 and 2 unconfirmed); 2, 4, 6 and 15 are freeway road properties; 7, 11, 17 and others are not identified yet.";
@@ -1984,7 +1990,7 @@ VAL_ 391 MO_Waehlpos 2 "P" 3 "R" 4 "N" 5 "D" 6 "D" ;
 VAL_ 391 EV_Rekuperationsstufe 0 "default" 1 "B1" 2 "B2" 3 "B3" ;
 VAL_ 870 Fast_Send_Rate_Active 0 "1 Hz" 1 "50 Hz" ;
 VAL_ 988 EPB_Status 0 "offen" 1 "geschlossen_Parken" 2 "teilgespannt_Halten" 3 "im_Lauf_oeffnen" 4 "im_Lauf_schliessen" 5 "tbd" 6 "Init" 7 "unbekannt";
-VAL_ 988 GE_Fahrstufe 0 "Zwischenstellung" 1 "Init" 5 "P" 6 "R" 7 "N" 8 "D" 9 "D" 10 "E" 13 "T" 14 "T" 15 "Fehler";
+VAL_ 988 GE_Fahrstufe 0 "Zwischenstellung" 1 "Init" 5 "P" 6 "R" 7 "N" 8 "D" 9 "S" 10 "E" 13 "T" 14 "T" 15 "Fehler";
 VAL_ 1720 KBI_Variante_USA 0 "keine USA-Variante" 1 "USA-Variante" ;
 VAL_ 1720 KBI_Variante 0 "Zeiger Kombiinstrument" 1 "Volldisplay Kombiinstrument" ;
 VAL_ 1720 KBI_BCmE_aktiv 0 "Anzeige_nicht_aktiv" 1 "Anzeige_aktiv" ;
