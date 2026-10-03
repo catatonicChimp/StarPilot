@@ -177,9 +177,9 @@ class CarState(CarStateBase):
     # Speed limit sign read by the front camera's traffic sign recognition. Signs with a supplementary plate
     # (e.g. school zone hours) are left to other sources, since the camera can't tell whether they apply.
     if not self.CP.flags & VolkswagenFlags.MLB:
-      sign = cam_cp.vl["Kamera_SpeedLimit_01"]
-      if sign["Status"] == 3 and sign["SpeedLimit_1"] > 0 and not sign["SpeedLimit_1_Conditional"]:
-        fp_ret.dashboardSpeedLimit = sign["SpeedLimit_1"] * CV.KPH_TO_MS
+      sign = cam_cp.vl["VZE_01"]
+      if sign["VZE_Hinweistext"] == 3 and sign["VZE_Verkehrszeichen_1"] > 0 and not sign["VZE_Warnung_Verkehrszeichen_1"]:
+        fp_ret.dashboardSpeedLimit = sign["VZE_Verkehrszeichen_1"] * 5 * CV.KPH_TO_MS
 
     return ret, fp_ret
 
@@ -485,7 +485,7 @@ class CarState(CarStateBase):
       ]
     if not CP.flags & VolkswagenFlags.MLB:
       cam_messages += [
-        ("Kamera_SpeedLimit_01", 0),  # From R242 front camera, only on cars with sign recognition: optional
+        ("VZE_01", 0),  # From R242 front camera, only on cars with sign recognition: optional
       ]
 
     parsers = {

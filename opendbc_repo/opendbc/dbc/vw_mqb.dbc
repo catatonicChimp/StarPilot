@@ -222,6 +222,9 @@ BO_ 869 BEM_05: 8 Gateway_MQB
  SG_ BEM_Segel_Info : 48|2@1+ (1,0) [0|3] "" Getriebe_DQ_Hybrid_MQB,Getriebe_DQ_MQB,Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
  SG_ BEM_HYB_DC_uSollLV : 50|6@1+ (0.1,10.6) [10.6|16] "Unit_Volt" LEH_MQB
  SG_ BEM_HYB_DC_uMinLV : 56|8@1+ (0.1,0) [0|25.3] "Unit_Volt" LEH_MQB
+ SG_ BEM_UBDM : 0|8@1+ (0.05,5) [5.05|17.70] "Unit_Volt" XXX
+ SG_ NVEM_Ladefreigabe : 8|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ NVEM_FMAus_Info : 10|2@1+ (1.0,0.0) [0.0|3] "" XXX
 
 BO_ 1628 BMS_Hybrid_01: 8 BMS_MQB
  SG_ BMS_HYB_ASV_hinten_Status : 13|1@1+ (1,0) [0|1] "" Gateway_MQB
@@ -786,6 +789,8 @@ BO_ 263 Motor_04: 8 Motor_Diesel_MQB
  SG_ MO_Ladedruck : 39|9@1+ (0.01,0) [0|5.1] "Unit_Bar" Gateway_MQB
  SG_ MO_KVS : 48|15@1+ (1,0) [0|32767] "Unit_MicroLiter" Gateway_MQB
  SG_ MO_KVS_Ueberlauf : 63|1@1+ (1,0) [0|1] "" Gateway_MQB
+ SG_ MO_rel_Ladedruck : 0|8@1+ (0.4,0) [0.0|100.0] "Unit_PerCent" XXX
+ SG_ MO_Effizienzmodus : 36|1@1+ (1.0,0.0) [0.0|1] "" XXX
 
 BO_ 1600 Motor_07: 8 Motor_Diesel_MQB
  SG_ MO_QBit_Ansaugluft_Temp : 0|1@1+ (1,0) [0|1] "" Gateway_MQB
@@ -1373,50 +1378,100 @@ BO_ 919 LDW_02: 8 XXX
  SG_ LDW_Status_LED_gruen : 62|1@1+ (1,0) [0|1] ""  XXX
  SG_ LDW_KD_Fehler : 63|1@1+ (1,0) [0|1] ""  XXX
 
-BO_ 806 Kamera_LaneLine_EgoLeft: 8 XXX
- SG_ Offset : 0|12@1+ (0.00390625,-8) [-8|7.99609375] "m"  XXX
- SG_ Unknown_12 : 12|9@1+ (1,0) [0|511] ""  XXX
- SG_ Heading : 21|12@1+ (0.00048828125,-1) [-1|0.99951171875] "rad"  XXX
- SG_ Unknown_33 : 33|12@1+ (1,0) [0|4095] ""  XXX
- SG_ Curvature : 45|12@1+ (0.00002,-0.04096) [-0.04096|0.04094] "1/m"  XXX
- SG_ Unknown_57 : 57|7@1+ (1,0) [0|127] ""  XXX
+BO_ 806 BV_Linie_01: 8 XXX
+ SG_ BV_Linie_01_dy : 0|12@1+ (0.00390625,-8) [-8.00000000|7.99609375] "Unit_Meter" XXX
+ SG_ BV_Linie_01_Existenzmass : 12|6@1+ (0.015625,0) [0.000000|0.984375] "Unit_Meter" XXX
+ SG_ BV_Linie_01_Farbe : 18|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ BV_Linie_01_Gierw_diff : 21|12@1+ (0.00048828125,-1) [-1.00000000000|0.99951171875] "Unit_Radia" XXX
+ SG_ BV_Linie_01_hor_Kruemm_Aend : 33|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_01_hor_Kruemmung : 45|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_01_Liniennummer : 57|4@1+ (1,0) [1|15] "" XXX
+ SG_ BV_Linie_01_Typ : 61|3@1+ (1.0,0.0) [0.0|7] "" XXX
 
-BO_ 807 Kamera_LaneLine_EgoRight: 8 XXX
- SG_ Offset : 0|12@1+ (0.00390625,-8) [-8|7.99609375] "m"  XXX
- SG_ Unknown_12 : 12|9@1+ (1,0) [0|511] ""  XXX
- SG_ Heading : 21|12@1+ (0.00048828125,-1) [-1|0.99951171875] "rad"  XXX
- SG_ Unknown_33 : 33|12@1+ (1,0) [0|4095] ""  XXX
- SG_ Curvature : 45|12@1+ (0.00002,-0.04096) [-0.04096|0.04094] "1/m"  XXX
- SG_ Unknown_57 : 57|7@1+ (1,0) [0|127] ""  XXX
+BO_ 807 BV_Linie_02: 8 XXX
+ SG_ BV_Linie_02_dy : 0|12@1+ (0.00390625,-8) [-8.00000000|7.99609375] "Unit_Meter" XXX
+ SG_ BV_Linie_02_Existenzmass : 12|6@1+ (0.015625,0) [0.000000|0.984375] "Unit_Meter" XXX
+ SG_ BV_Linie_02_Farbe : 18|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ BV_Linie_02_Gierw_diff : 21|12@1+ (0.00048828125,-1) [-1.00000000000|0.99951171875] "Unit_Radia" XXX
+ SG_ BV_Linie_02_hor_Kruemm_Aend : 33|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_02_hor_Kruemmung : 45|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_02_Liniennummer : 57|4@1+ (1,0) [1|15] "" XXX
+ SG_ BV_Linie_02_Typ : 61|3@1+ (1.0,0.0) [0.0|7] "" XXX
 
-BO_ 808 Kamera_LaneLine_NextLeft: 8 XXX
- SG_ Offset : 0|12@1+ (0.00390625,-8) [-8|7.99609375] "m"  XXX
- SG_ Unknown_12 : 12|9@1+ (1,0) [0|511] ""  XXX
- SG_ Heading : 21|12@1+ (0.00048828125,-1) [-1|0.99951171875] "rad"  XXX
- SG_ Unknown_33 : 33|12@1+ (1,0) [0|4095] ""  XXX
- SG_ Curvature : 45|12@1+ (0.00002,-0.04096) [-0.04096|0.04094] "1/m"  XXX
- SG_ Unknown_57 : 57|7@1+ (1,0) [0|127] ""  XXX
+BO_ 808 BV_Linie_03: 8 XXX
+ SG_ BV_Linie_03_dy : 0|12@1+ (0.00390625,-8) [-8.00000000|7.99609375] "Unit_Meter" XXX
+ SG_ BV_Linie_03_Existenzmass : 12|6@1+ (0.015625,0) [0.000000|0.984375] "Unit_Meter" XXX
+ SG_ BV_Linie_03_Farbe : 18|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ BV_Linie_03_Gierw_diff : 21|12@1+ (0.00048828125,-1) [-1.00000000000|0.99951171875] "Unit_Radia" XXX
+ SG_ BV_Linie_03_hor_Kruemm_Aend : 33|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_03_hor_Kruemmung : 45|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_03_Liniennummer : 57|4@1+ (1,0) [1|15] "" XXX
+ SG_ BV_Linie_03_Typ : 61|3@1+ (1.0,0.0) [0.0|7] "" XXX
 
-BO_ 809 Kamera_LaneLine_NextRight: 8 XXX
- SG_ Offset : 0|12@1+ (0.00390625,-8) [-8|7.99609375] "m"  XXX
- SG_ Unknown_12 : 12|9@1+ (1,0) [0|511] ""  XXX
- SG_ Heading : 21|12@1+ (0.00048828125,-1) [-1|0.99951171875] "rad"  XXX
- SG_ Unknown_33 : 33|12@1+ (1,0) [0|4095] ""  XXX
- SG_ Curvature : 45|12@1+ (0.00002,-0.04096) [-0.04096|0.04094] "1/m"  XXX
- SG_ Unknown_57 : 57|7@1+ (1,0) [0|127] ""  XXX
+BO_ 809 BV_Linie_04: 8 XXX
+ SG_ BV_Linie_04_dy : 0|12@1+ (0.00390625,-8) [-8.00000000|7.99609375] "Unit_Meter" XXX
+ SG_ BV_Linie_04_Existenzmass : 12|6@1+ (0.015625,0) [0.000000|0.984375] "Unit_Meter" XXX
+ SG_ BV_Linie_04_Farbe : 18|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ BV_Linie_04_Gierw_diff : 21|12@1+ (0.00048828125,-1) [-1.00000000000|0.99951171875] "Unit_Radia" XXX
+ SG_ BV_Linie_04_hor_Kruemm_Aend : 33|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_04_hor_Kruemmung : 45|12@1+ (1,-2047) [-2047|2048] "" XXX
+ SG_ BV_Linie_04_Liniennummer : 57|4@1+ (1,0) [1|15] "" XXX
+ SG_ BV_Linie_04_Typ : 61|3@1+ (1.0,0.0) [0.0|7] "" XXX
 
-BO_ 385 Kamera_SpeedLimit_01: 8 XXX
- SG_ Status : 2|2@1+ (1,0) [0|3] ""  XXX
- SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
- SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
- SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
- SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+BO_ 385 VZE_01: 8 XXX
+ SG_ VZE_Anzeigemodus : 0|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ VZE_Hinweistext : 2|3@1+ (1,0) [1|7] "" XXX
+ SG_ VZE_Akustik_Limitwechsel : 5|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Modus_OptischeWarnung : 6|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Anzeigeunterdrueck_Zeichen_3 : 9|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Anzeigeunterdrueck_Zeichen_2 : 10|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Verkehrszeichen_1 : 11|8@1+ (1,0) [1|255] "" XXX
+ SG_ VZE_Verkehrszeichen_2 : 19|8@1+ (1,0) [1|255] "" XXX
+ SG_ VZE_Verkehrszeichen_3 : 27|8@1+ (1,0) [1|255] "" XXX
+ SG_ VZE_Warnung_Verkehrszeichen_1 : 35|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Warnung_Verkehrszeichen_2 : 36|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Warnung_Verkehrszeichen_3 : 37|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zusatzschild_1 : 38|4@1+ (1,0) [1|15] "" XXX
+ SG_ VZE_Zusatzschild_2 : 42|4@1+ (1,0) [1|15] "" XXX
+ SG_ VZE_Zusatzschild_3 : 46|4@1+ (1,0) [1|15] "" XXX
+ SG_ VZE_Anzeigeunterdrueck_Zeichen_1 : 50|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_01_KameraWied : 51|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_02_KameraWied : 52|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_03_KameraWied : 53|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_01_Kamera : 54|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_01_Karte : 55|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_01_Gesetz : 56|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_02_Kamera : 57|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_02_Karte : 58|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_02_Gesetz : 59|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_03_Kamera : 60|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_03_Karte : 61|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_03_Gesetz : 62|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Gong : 63|1@1+ (1.0,0.0) [0.0|1] "" XXX
 
-BO_ 668 Kamera_SpeedLimit_02: 8 XXX
- SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
- SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
- SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
- SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+BO_ 668 VZE_02: 8 XXX
+ SG_ VZE_Akustik_Limitwechsel_Status : 5|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_SLWF_Status : 6|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ VZE_Anzeigeunterdrueck_Zeichen_5 : 8|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_05_KameraWied : 9|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_05_Kamera : 10|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Verkehrszeichen_4 : 11|8@1+ (1,0) [1|255] "" XXX
+ SG_ VZE_Verkehrszeichen_5 : 19|8@1+ (1,0) [1|255] "" XXX
+ SG_ VZE_Anhaenger_Vmax : 27|4@1+ (10,10) [10|140] "Unit_KiloMeterPerHour" XXX
+ SG_ VZE_Zeichen_04_Gesetz : 31|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_04_Kamera : 32|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_04_KameraWied : 33|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_04_Karte : 34|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Warnung_Verkehrszeichen_4 : 35|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Warnung_Verkehrszeichen_5 : 36|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_05_Gesetz : 37|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zusatzschild_4 : 38|4@1+ (1,0) [1|15] "" XXX
+ SG_ VZE_Zusatzschild_5 : 42|4@1+ (1,0) [1|15] "" XXX
+ SG_ VZE_Baustelle : 46|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ VZE_Zeichen_05_Karte : 48|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ VZE_Zeichen_05_Entfernung : 49|7@1+ (1,0) [1|127] "Unit_Meter" XXX
+ SG_ VZE_Zeichen_05_Entfernung_StdA : 56|7@1+ (1,0) [1|127] "Unit_Meter" XXX
+ SG_ VZE_Anzeigeunterdrueck_Zeichen_4 : 63|1@1+ (1.0,0.0) [0.0|1] "" XXX
 
 BO_ 780 ACC_02: 8 XXX
  SG_ CHECKSUM : 0|8@1+ (1,0) [0|255] ""  XXX
@@ -1512,6 +1567,33 @@ BO_ 997 TSG_FT_02: 8 XXX
  SG_ TSG_FT_02_CRC : 0|8@1+ (1,0) [0|255] "" XXX
 
 BO_ 1175 Parkhilfe_01: 8 XXX
+ SG_ PH_Visualisierung : 0|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ PDC_Tonausgabe_Front : 4|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ PDC_Tonausgabe_Heck : 8|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ PH_nachtr_Stopp_Anf : 12|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Abschaltursache : 13|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ PH_Opt_Anzeige_V_ein : 16|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Opt_Anzeige_H_ein : 17|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Opt_Anz_V_Hindernis : 18|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Opt_Anz_H_Hindernis : 19|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Tongeber_V_aktiv : 20|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Tongeber_H_aktiv : 21|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Tongeber_mute : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Anf_Audioabsenkung : 23|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Tongeber_H_verfuegbar : 24|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PLA_Anf_Aufschaltung_RVC : 25|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Taster : 28|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ PH_Anf_Verdeck : 30|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ PH_Frequenz_hinten : 32|4@1+ (1,0) [0|15] "" XXX
+ SG_ PH_Lautstaerke_hinten : 36|4@1+ (1,0) [0|15] "" XXX
+ SG_ PH_Frequenz_vorn : 40|4@1+ (1,0) [0|15] "" XXX
+ SG_ PH_Lautstaerke_vorn : 44|4@1+ (1,0) [0|15] "" XXX
+ SG_ PH_StartStopp_Info : 49|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ PH_Stoermeldung : 52|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ PH_defekt : 56|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_gestoert : 57|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ PH_Systemzustand : 58|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ PH_Display_Kundenwunsch : 61|2@1+ (1.0,0.0) [0.0|3] "" XXX
 
 BO_ 427 ESP_33: 8 Gateway_MQB
  SG_ CHECKSUM : 0|8@1+ (1,0) [0|255] ""  Motor_Hybrid_MQB,Motor_Otto_MQB
@@ -1670,6 +1752,7 @@ BO_ 988 Gateway_73: 8 XXX
  SG_ GE_Fahrstufe : 40|4@1+ (1,0) [0|15] "" XXX
  SG_ EPB_Status : 53|3@1+ (1,0) [0|7] "" XXX
  SG_ UNKNOWN_2 : 58|3@0+ (1,0) [0|7] "" XXX
+ SG_ MO_Drehzahl_01 : 16|16@1+ (0.25,0) [0.00|16383.00] "Unit_MinutInver" XXX
 
 BO_ 792 Kamera_Status: 8 XXX
 
@@ -1703,6 +1786,17 @@ BO_ 981 Licht_Anf_01: 8 Vector__XXX
  SG_ BCM1_Allwetterlicht_Anf : 41|1@1+ (1,0) [0|1] ""  Frontradar
 
 BO_ 1440 RLS_01: 8 XXX
+ SG_ LS_Helligkeit_IR : 0|8@1+ (400,0) [0|101200] "Unit_Lux" XXX
+ SG_ LS_Helligkeit_FW : 8|10@1+ (6,0) [0|6126] "Unit_Lux" XXX
+ SG_ LS_defekt : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LS_Verbau : 23|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RS_Regenmenge : 24|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ RS_Schwall : 28|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RS_Verbau : 29|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RS_Verglasung_schliessen : 30|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RS_defekt : 31|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RS_Wischergeschwindigkeit : 32|3@1+ (1.0,0.0) [0.0|7] "" XXX
+ SG_ RLS_Vorfeldhelligkeit_Boost : 35|4@1+ (1.0,0.0) [0.0|15] "" XXX
 
 BO_ 870 Blinkmodi_02: 8 XXX
  SG_ Hazard_Switch : 20|1@1+ (1,0) [0|1] ""  XXX
@@ -1719,8 +1813,53 @@ BO_ 1385 HVEM_04: 8 XXX
 BO_ 1605 FLA_01: 8 XXX
 
 BO_ 1624 Licht_vorne_01: 8 XXX
+ SG_ LV_Standlicht_Anzeige : 12|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblendlicht_Anzeige : 13|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Fernlicht_Anzeige : 14|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebellicht_Anzeige : 15|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebelschlusslicht_Anzeige : 16|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Tagfahrlicht_Anzeige : 17|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_AFL_aktiv_Anzeige : 18|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_AFL_defekt : 19|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blinker_li_def : 20|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Standlicht_li_def : 21|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblendlicht_li_def : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Fernlicht_li_def : 23|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebellicht_li_def : 24|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blk_li_Seite_def : 25|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Tagfahrlicht_li_def : 26|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_FLA_aktiv_Anzeige : 27|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_FLA_defekt : 28|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_FLA_Sensor_blockiert : 29|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blinker_re_def : 30|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Standlicht_re_def : 31|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblendlicht_re_def : 32|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Fernlicht_re_def : 33|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebellicht_re_def : 34|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blk_re_Seite_def : 35|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Tagfahrlicht_re_def : 36|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Aussenlicht_def : 37|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblendlicht_TFL_li_def : 38|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebellicht_TFL_li_def : 39|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Standlicht_TFL_li_def : 40|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblend_Fernlicht_li_def : 41|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblendlicht_TFL_re_def : 42|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Nebellicht_TFL_re_def : 43|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Standlicht_TFL_re_def : 44|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abblend_Fernlicht_re_def : 45|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abbiegelicht_li_def : 46|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Abbiegelicht_re_def : 47|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BCM1_Linksverkehr : 48|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BCM1_Licht_Dunkelheit_aktiv : 49|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_LED_Scheinwerfer_li_def : 50|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_LED_Scheinwerfer_re_def : 51|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blinker_VL_aktiv : 52|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_Blinker_VR_aktiv : 53|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LV_MXB_Status_Anzeige : 54|2@1+ (1.0,0.0) [0.0|3] "" XXX
 
 BO_ 1646 Klima_03: 8 XXX
+ SG_ KL_Geblaese_Status : 18|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ KL_Innen_Temp : 32|8@1+ (0.5,-50) [-50.0|76.0] "Unit_DegreCelsi" XXX
 
 BO_ 1720 Kombi_03: 8 XXX
  SG_ KBI_Reifenumfang : 0|12@1+ (1,0) [0|4095] "Unit_MilliMeter"  XXX
@@ -1751,6 +1890,155 @@ BO_ 391 Motor_EV_01: 8 Motor_MQB_BEV
  SG_ MO_HVEM_Eskalation : 54|1@1+ (1.0,0.0) [0.0|1] ""  XXX
  SG_ MO_HVEM_MaxLeistung : 55|9@1+ (50,0) [0|25450] "Unit_Watt"  XXX
 
+BO_ 980 SMLS_01: 8 XXX
+ SG_ SMLS_01_CRC : 0|8@1+ (1,0) [0|255] "" XXX
+ SG_ SMLS_01_BZ : 8|4@1+ (1,0) [0|15] "" XXX
+ SG_ BH_Blinker_li : 12|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BH_Blinker_re : 13|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BH_Lichthupe : 14|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BH_Fernlicht : 15|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Tipwischen : 16|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Intervall : 17|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_WischerStufe1 : 18|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_WischerStufe2 : 19|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Frontwaschen : 20|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Heckintervall : 21|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Heckwaschen : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Intervallstufen : 23|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ FAS_Taster : 27|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ FAS_Taster_Fehler : 28|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ SMLS_Hupe : 29|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ LRH_On_Off : 30|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ LSS_Tastencode : 32|8@1+ (1.0,0.0) [0.0|255] "" XXX
+ SG_ LRH_aktiv : 40|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ SMLS_P_verriegelt : 41|2@1+ (1.0,0.0) [0.0|3] "" XXX
+ SG_ SMLS_P_verriegelt_plausibel : 43|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_SRA : 44|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Wischer_Fehler : 45|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ BH_Blinker_Fehler : 46|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ SMLS_PTT : 47|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ WH_Tipwischen_lang : 48|1@1+ (1.0,0.0) [0.0|1] "" XXX
+
+BO_ 1712 Klima_Sensor_01: 6 XXX
+ SG_ FS_Taupunkt : 0|10@1+ (0.1,-39.6) [-39.5|60.4] "Unit_DegreCelsi" XXX
+ SG_ FS_ResponseError : 15|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ FS_Temp_Scheibe : 16|10@1+ (0.1,-39.6) [-39.5|60.4] "Unit_DegreCelsi" XXX
+ SG_ FS_Temp_Sensor : 32|8@1+ (0.5,-40) [-39.5|87.0] "Unit_DegreCelsi" XXX
+ SG_ FS_Luftfeuchte_rel : 40|8@1+ (0.5,-0.5) [0.0|100.0] "Unit_PerCent" XXX
+
+BO_ 1162 BV_Linien: 8 XXX
+ SG_ BV_Linie_01_dx_Vorausschau : 28|9@1+ (0.25,0) [0.00|127.75] "Unit_Meter" XXX
+ SG_ BV_Linie_02_dx_Vorausschau : 37|9@1+ (0.25,0) [0.00|127.75] "Unit_Meter" XXX
+ SG_ BV_Linie_03_dx_Vorausschau : 46|9@1+ (0.25,0) [0.00|127.75] "Unit_Meter" XXX
+ SG_ BV_Linie_04_dx_Vorausschau : 55|9@1+ (0.25,0) [0.00|127.75] "Unit_Meter" XXX
+
+BO_ 2589283745 RDR_SDA_01: 8 XXX
+ SG_ RDR_QBit_Objekte : 6|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ RDR_RNS2_PositionX : 7|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_RNS1_PositionX : 13|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_LNS2_PositionX : 19|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_WZO_GeschwAbsX : 25|7@1+ (3.7874,-240) [-240.0000|237.2124] "Unit_KiloMeterPerHour" XXX
+ SG_ RDR_WZO_PositionX : 32|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_VZO_PositionX : 38|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_RNS1_GeschwAbsX : 44|7@1+ (3.7874,-240) [-240.0000|237.2124] "Unit_KiloMeterPerHour" XXX
+ SG_ RDR_LNS1_PositionX : 51|6@1+ (4.0323,0) [0.0000|250.0026] "Unit_Meter" XXX
+ SG_ RDR_LNS1_GeschwAbsX : 57|7@1+ (3.7874,-240) [-240.0000|237.2124] "Unit_KiloMeterPerHour" XXX
+
+BO_ 896 APS_Master: 8 XXX
+ SG_ US_ACC_CRC : 0|8@1+ (1,0) [0|255] "" XXX
+ SG_ US_ACC_BZ : 8|4@1+ (1,0) [0|15] "" XXX
+ SG_ US_Sende_Modus : 16|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ US_relevanter_Fehler : 20|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_relevante_Nichtverfuegbarkeit : 21|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_Freisicht_nio : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_blindness_detected : 23|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_Sende_Modus_hinten : 24|4@1+ (1.0,0.0) [0.0|15] "" XXX
+ SG_ US_Freie_Weglaenge_Heck_Typ : 28|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_Freie_Weglaenge_Heck : 29|9@1+ (0.01,0) [0.00|5.00] "Unit_Meter" XXX
+ SG_ APS_Master_Sendestatus : 53|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_Freie_Weglaenge_Front_Typ : 54|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ US_Freie_Weglaenge_Front : 55|9@1+ (0.01,0) [0.00|5.00] "Unit_Meter" XXX
+
+BO_ 897 APS_01: 8 XXX
+ SG_ US_RDir_VL : 0|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RDir_VLM : 8|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VLM_VL : 16|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VLM_VRM : 24|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VL_VLM : 32|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_GDir_VL : 40|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GDir_VLM : 44|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VLM_VL : 48|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VLM_VRM : 52|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VL_VLM : 56|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ APS_01_Paketzaehler : 60|4@1+ (1,0) [0|15] "" XXX
+
+BO_ 898 APS_02: 8 XXX
+ SG_ US_RDir_VR : 0|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RDir_VRM : 8|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VRM_VR : 16|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VRM_VLM : 24|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_RIndir_VR_VRM : 32|8@1+ (0.02,0) [0.00|5.10] "Unit_Meter" XXX
+ SG_ US_GDir_VR : 40|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GDir_VRM : 44|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VRM_VLM : 48|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VRM_VR : 52|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ US_GIndir_VR_VRM : 56|4@1+ (0.066,0) [0.000|0.990] "" XXX
+ SG_ APS_02_Paketzaehler : 60|4@1+ (1,0) [0|15] "" XXX
+
+BO_ 1654 Motor_21: 8 XXX
+ SG_ StSt_Koord_Wiederstart_Anz_09 : 0|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_10 : 1|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_11 : 2|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Wiederstart_Anz_01 : 12|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Wiederstart_Anz_02 : 13|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Wiederstart_Anz_03 : 14|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Wiederstart_Anz_Std : 15|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_01 : 16|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_02 : 17|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_03 : 18|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_04 : 19|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_05 : 20|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_06 : 21|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_07 : 22|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_08 : 23|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_09 : 24|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_10 : 25|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_11 : 26|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_Stoppverbot_Anz_Std : 27|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_20 : 28|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_21 : 29|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_Std : 30|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Status_Bremspedalkzpt : 31|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_01 : 32|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_02 : 33|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_03 : 34|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_04 : 35|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_05 : 36|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_06 : 37|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_07 : 38|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Wiederstart_Anz_08 : 39|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_01 : 40|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_02 : 41|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_03 : 42|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_04 : 43|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_05 : 44|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_06 : 45|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_07 : 46|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_08 : 47|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_09 : 48|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_10 : 49|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_11 : 50|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_12 : 51|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_13 : 52|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_14 : 53|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_15 : 54|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_16 : 55|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_17 : 56|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_Std : 57|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_18 : 58|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ StSt_Koord_Stoppverbot_Anz_19 : 59|1@1+ (1.0,0.0) [0.0|1] "" XXX
+ SG_ MO_StaGluehk : 60|4@1+ (8,0) [0|112] "Unit_PerCent" XXX
+
 CM_ BO_ 901 "Target drive profile per system, sent when the driving profile selection (MODE button) changes. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
 CM_ SG_ 968 GE_Charisma_FahrPr "Drive profile program number. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
 CM_ SG_ 812 MO_Charisma_FahrPr "Drive profile program number. Meaning depends on the car coding; on a 2016 Golf Mk7 with driving profile selection: 5 = Eco, 2 = Normal, 3 = Sport; Individual has no own code (each system gets its configured profile). Cars with more modes (Comfort, Race, Offroad) use other numbers.";
@@ -1759,6 +2047,153 @@ CM_ SG_ 1626 BCM_Eco_Charisma_Taste "Driving profile selection (MODE) button pre
 CM_ SG_ 988 GE_Fahrstufe "Selector position. 2016 Golf Mk7 DQ200: D = 8, S = 9, D shown as E with the Eco drive profile = 10, tiptronic = 14 (same values as Getriebe_11).";
 CM_ BO_ 1122 "Predictive route data (PSD, electronic horizon) from the navigation unit: road segments ahead. Layout from vw_meb (same VW PSD protocol); checked on a 2016 Golf Mk7 with Discover Media/Pro.";
 CM_ BO_ 1123 "Predictive route data (PSD): vehicle position on the segment tree and segment attributes with offsets.";
+CM_ BO_ 385 "Front camera traffic sign recognition (VZE), signs 1-3 as shown on the cluster. On a 2016 Golf Mk7 (AU, km/h) speed-limit signs read VZE_Verkehrszeichen_x * 5 = km/h (seen 40, 50, 60, 80, 100, 110).";
+CM_ SG_ 385 VZE_Hinweistext "3 once a sign has been recognised, 0 before the first sign (2016 Golf Mk7, AU).";
+CM_ SG_ 385 VZE_Verkehrszeichen_1 "Main sign, coded per VW hash table, 0 = none. Speed limits: value * 5 = km/h on a 2016 Golf Mk7 (AU).";
+CM_ SG_ 385 VZE_Verkehrszeichen_2 "Second sign shown alongside the first (seen as 40 with a 50 main sign, e.g. a school zone). Same coding as VZE_Verkehrszeichen_1.";
+CM_ SG_ 385 VZE_Warnung_Verkehrszeichen_1 "Set on every school-zone 40 sign on a 2016 Golf Mk7 (AU); treated as a conditional sign.";
+CM_ SG_ 385 VZE_Zusatzschild_1 "Supplementary plate for sign 1, coded per VW hash table. Always 0 on a 2016 Golf Mk7 (AU), school zones included.";
+CM_ SG_ 385 VZE_Zeichen_01_Kamera "Sign 1 comes from the camera.";
+CM_ SG_ 385 VZE_Zeichen_01_Karte "Sign 1 comes from the map.";
+CM_ SG_ 385 VZE_Zeichen_01_Gesetz "Sign 1 is the default legal limit.";
+CM_ SG_ 385 VZE_Zeichen_01_KameraWied "Sign 1 was recognised by the camera as a repeater sign.";
+CM_ BO_ 668 "Front camera traffic sign recognition (VZE), signs 4-5. Same coding as VZE_01.";
+CM_ BO_ 806 "Front camera lane line model: own lane, left line. 12.5 Hz, no checksum/counter. Checked against openpilot modelV2 lane lines on a 2016 Golf Mk7. Lookahead distance for this line is BV_Linien.BV_Linie_01_dx_Vorausschau.";
+CM_ SG_ 806 BV_Linie_01_dy "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
+CM_ SG_ 806 BV_Linie_01_Gierw_diff "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
+CM_ SG_ 806 BV_Linie_01_hor_Kruemmung "Line curvature, positive = bending left. r=0.85 vs model; roughly 2e-5 1/m per step.";
+CM_ SG_ 806 BV_Linie_01_hor_Kruemm_Aend "Curvature change along the line.";
+CM_ SG_ 806 BV_Linie_01_Existenzmass "Line existence confidence, 0 when there is no line.";
+CM_ BO_ 807 "Front camera lane line model: own lane, right line. 12.5 Hz, no checksum/counter. Checked against openpilot modelV2 lane lines on a 2016 Golf Mk7. Lookahead distance for this line is BV_Linien.BV_Linie_02_dx_Vorausschau.";
+CM_ SG_ 807 BV_Linie_02_dy "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
+CM_ SG_ 807 BV_Linie_02_Gierw_diff "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
+CM_ SG_ 807 BV_Linie_02_hor_Kruemmung "Line curvature, positive = bending left. r=0.85 vs model; roughly 2e-5 1/m per step.";
+CM_ SG_ 807 BV_Linie_02_hor_Kruemm_Aend "Curvature change along the line.";
+CM_ SG_ 807 BV_Linie_02_Existenzmass "Line existence confidence, 0 when there is no line.";
+CM_ BO_ 808 "Front camera lane line model: next line out to the left. 12.5 Hz, no checksum/counter. Checked against openpilot modelV2 lane lines on a 2016 Golf Mk7. Lookahead distance for this line is BV_Linien.BV_Linie_03_dx_Vorausschau.";
+CM_ SG_ 808 BV_Linie_03_dy "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
+CM_ SG_ 808 BV_Linie_03_Gierw_diff "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
+CM_ SG_ 808 BV_Linie_03_hor_Kruemmung "Line curvature, positive = bending left. r=0.85 vs model; roughly 2e-5 1/m per step.";
+CM_ SG_ 808 BV_Linie_03_hor_Kruemm_Aend "Curvature change along the line.";
+CM_ SG_ 808 BV_Linie_03_Existenzmass "Line existence confidence, 0 when there is no line.";
+CM_ BO_ 809 "Front camera lane line model: next line out to the right. 12.5 Hz, no checksum/counter. Checked against openpilot modelV2 lane lines on a 2016 Golf Mk7. Lookahead distance for this line is BV_Linien.BV_Linie_04_dx_Vorausschau.";
+CM_ SG_ 809 BV_Linie_04_dy "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
+CM_ SG_ 809 BV_Linie_04_Gierw_diff "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
+CM_ SG_ 809 BV_Linie_04_hor_Kruemmung "Line curvature, positive = bending left. r=0.85 vs model; roughly 2e-5 1/m per step.";
+CM_ SG_ 809 BV_Linie_04_hor_Kruemm_Aend "Curvature change along the line.";
+CM_ SG_ 809 BV_Linie_04_Existenzmass "Line existence confidence, 0 when there is no line.";
+CM_ SG_ 869 BEM_UBDM "Batteriespannung, measured from_the Batteriedatenmodul";
+CM_ SG_ 869 NVEM_FMAus_Info "Coasting info to the coasting coordinator. Only for the coasting phase. Used in micro-hybrid.";
+CM_ SG_ 1175 PH_StartStopp_Info "Stop enable and start request to the start/stop coordinator";
+CM_ BO_ 2589283745 "Radar 'swarm data' view of nearby vehicles, about 1 Hz, 4 m / 3.8 km/h steps. On a 2016 Golf Mk7: WZO = the followed target (tracks openpilot's lead, read ~4 m long), VZO = the vehicle ahead of it, LNS1/2 and RNS1/2 = 1st/2nd vehicle in the left/right lane. 254 m = no vehicle.";
+CM_ SG_ 2589283745 RDR_QBit_Objekte "(RDR_Qbit_Objekte) Set to error or substitute value when the radar ECU cannot detect objects reliably.";
+CM_ SG_ 2589283745 RDR_RNS2_PositionX "Distance in x to the 2nd vehicle in the right lane";
+CM_ SG_ 2589283745 RDR_RNS1_PositionX "Distance in x to the 1st vehicle in the right lane";
+CM_ SG_ 2589283745 RDR_LNS2_PositionX "Distance in x to the 2nd vehicle in the left lane";
+CM_ SG_ 2589283745 RDR_WZO_GeschwAbsX "Absolute speed of the vehicle ahead in the ego lane";
+CM_ SG_ 2589283745 RDR_WZO_PositionX "Distance in x to the 1st vehicle in the ego lane";
+CM_ SG_ 2589283745 RDR_VZO_PositionX "Distance in x to the 2nd vehicle in the ego lane";
+CM_ SG_ 2589283745 RDR_RNS1_GeschwAbsX "Absolute speed of the 1st vehicle in the right lane";
+CM_ SG_ 2589283745 RDR_LNS1_PositionX "Distance in x to the 1st vehicle in the left lane";
+CM_ SG_ 2589283745 RDR_LNS1_GeschwAbsX "Absolute speed of the 1st vehicle in the left lane";
+CM_ BO_ 896 "Ultrasonic park distance (parking sensors) master status. Present on a 2016 Golf Mk7 with front/rear parking sensors (no Park Assist).";
+CM_ SG_ 896 US_ACC_CRC "From MQB and MLBevo: 'Calculation see specification End-to-End communication protection'. End values see accompanying document 'S-PDU identifier sequences'";
+CM_ SG_ 896 US_Sende_Modus "US = ultrasonic. US_SendeModus: 0x0 no distance values relevant to the ACC ECU 0x1 4K ext. range, 10 signal paths ('4 m') 0x2 4K norm. range, 10 signal paths ('2 m') 0x3 6K ext. range, 16 signal paths ('4 m') ...";
+CM_ SG_ 896 US_relevanter_Fehler "Ultrasonic detects a fault in front object detection, fault stored.";
+CM_ SG_ 896 US_relevante_Nichtverfuegbarkeit "Ultrasonic detects unavailability of front object detection, no fault stored";
+CM_ SG_ 896 US_Freisicht_nio "Blindness detection: clear-view check not yet passed since ignition on";
+CM_ SG_ 896 US_blindness_detected "Ultrasonic detects its own blindness from external influences.";
+CM_ SG_ 896 US_Sende_Modus_hinten "US = ultrasonic. US_Sende_Modus_hinten: 0x0 no distance values relevant to the ACC ECU 0x1-0x4 free 0x5 2K ext. range (PLA), 2 signal paths ('4 m') 0x6 mode switch (ext -> norm or norm -> ext) 0x7 blindness check ...";
+CM_ SG_ 896 US_Freie_Weglaenge_Heck_Typ "US_Freie_Weglaenge_Typ says whether US_Freie_Weglaenge_Heck is a measured object or the maximum sensor range. Belongs to US_Freie_Weglaenge_Front";
+CM_ SG_ 896 US_Freie_Weglaenge_Heck "Steering-angle-dependent distance behind the vehicle: either to an obstacle or the maximum visible range. See US_Freie_Weglaenge... to tell them apart.";
+CM_ SG_ 896 APS_Master_Sendestatus "Transmit status of APS_Master (needed for IL support)";
+CM_ SG_ 896 US_Freie_Weglaenge_Front_Typ "Limit of the free path ahead of the vehicle; belongs to US_Freie_Weglaenge_Front. The free path can end at a measured object or at the maximum sensor range.";
+CM_ SG_ 896 US_Freie_Weglaenge_Front "Ultrasonic free path ahead of the vehicle, steering-angle dependent; limited by obstacles or the maximum visible range. See US_Freie_Weglaenge_Front_Typ";
+CM_ BO_ 897 "Ultrasonic park distance, front left sensors: direct (Dir) and cross (Indir) echo distances and their quality (G...). 5.1 m = nothing in range.";
+CM_ SG_ 897 US_RDir_VL "Direct measurement, ultrasonic sensor front left";
+CM_ SG_ 897 US_RDir_VLM "Direct measurement, ultrasonic sensor front left-centre";
+CM_ SG_ 897 US_RIndir_VLM_VL "Indirect measurement, ultrasonic sensors front left-centre (transmitter) and front left (receiver)";
+CM_ SG_ 897 US_RIndir_VLM_VRM "Indirect measurement, ultrasonic sensors front left-centre (transmitter) and front right-centre (receiver)";
+CM_ SG_ 897 US_RIndir_VL_VLM "Indirect measurement, ultrasonic sensors front left (transmitter) and front left-centre (receiver)";
+CM_ SG_ 897 US_GDir_VL "Quality of the direct measurement, ultrasonic sensor front left";
+CM_ SG_ 897 US_GDir_VLM "Quality of the direct measurement, ultrasonic sensor front left-centre";
+CM_ SG_ 897 US_GIndir_VLM_VL "Quality of the indirect measurement, ultrasonic sensors front left-centre (transmitter) and front left (receiver)";
+CM_ SG_ 897 US_GIndir_VLM_VRM "Quality of the indirect measurement, ultrasonic sensors front left-centre (transmitter) and front right-centre (receiver)";
+CM_ SG_ 897 US_GIndir_VL_VLM "Quality of the indirect measurement, ultrasonic sensors front left (transmitter) and front left-centre (receiver)";
+CM_ SG_ 897 APS_01_Paketzaehler "Used to verify message order APS_Master, APS_01, APS_02";
+CM_ BO_ 898 "Ultrasonic park distance, front right sensors: direct (Dir) and cross (Indir) echo distances and their quality (G...). 5.1 m = nothing in range.";
+CM_ SG_ 898 US_RDir_VR "Direct measurement, ultrasonic sensor front right";
+CM_ SG_ 898 US_RDir_VRM "Direct measurement, ultrasonic sensor front right-centre";
+CM_ SG_ 898 US_RIndir_VRM_VR "Indirect measurement, ultrasonic sensors front right-centre (transmitter) and front right (receiver)";
+CM_ SG_ 898 US_RIndir_VRM_VLM "Indirect measurement, ultrasonic sensors front right-centre (transmitter) and front left-centre (receiver)";
+CM_ SG_ 898 US_RIndir_VR_VRM "Indirect measurement, ultrasonic sensors front right (transmitter) and front right-centre (receiver)";
+CM_ SG_ 898 US_GDir_VR "Quality of the direct measurement, ultrasonic sensor front right";
+CM_ SG_ 898 US_GDir_VRM "Quality of the direct measurement, ultrasonic sensor front right-centre";
+CM_ SG_ 898 US_GIndir_VRM_VLM "Quality of the indirect measurement, ultrasonic sensors front right-centre (transmitter) and front left-centre (receiver)";
+CM_ SG_ 898 US_GIndir_VRM_VR "Quality of the indirect measurement, ultrasonic sensors front right-centre (transmitter) and front right (receiver)";
+CM_ SG_ 898 US_GIndir_VR_VRM "Quality of the indirect measurement, ultrasonic sensors front right (transmitter) and front right-centre (receiver)";
+CM_ SG_ 898 APS_02_Paketzaehler "Used to verify message order APS_Master, APS_01, APS_02";
+CM_ BO_ 1654 "Start/Stop coordinator status: why the engine may not stop (Stoppverbot) or must restart (Wiederstart). Powertrain CAN (gateway harness bus 1).";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_09 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_10 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_11 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 MO_Wiederstart_Anz_01 "Detailed reason for a restart request from the engine.";
+CM_ SG_ 1654 MO_Wiederstart_Anz_02 "Detailed reason for a restart request from the engine.";
+CM_ SG_ 1654 MO_Wiederstart_Anz_03 "Detailed reason for a restart request from the engine.";
+CM_ SG_ 1654 MO_Wiederstart_Anz_Std "Detailed reason for a restart request from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_01 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_02 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_03 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_04 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_05 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_06 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_07 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_08 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_09 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_10 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_11 "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 MO_Stoppverbot_Anz_Std "Detailed reason for an engine stop prohibition from the engine.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_20 "Engine must keep running because of online traffic-light info. 0 = engine stop not prevented by traffic-light info, 1 = traffic-light info prevents engine stop";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_21 "Engine must keep running because of race mode, S or tiptronic. 0 = not prevented, 1 = race mode, S or tiptronic prevents engine stop";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_Std "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Status_Bremspedalkzpt "Whether the brake pedal concept (start request, automatic) is active.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_01 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_02 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_03 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_04 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_05 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_06 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_07 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Wiederstart_Anz_08 "Detailed reason for a restart request from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_01 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_02 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_03 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_04 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_05 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_06 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_07 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_08 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_09 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_10 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_11 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_12 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_13 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_14 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_15 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_16 "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_17 "Whether a further driver action (e.g. releasing the clutch) is needed for an engine stop. 0 = engine stop not prevented by driver action, 1 = missing driver action prevents engine stop";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_Std "Detailed reason for an engine stop prohibition from the start/stop coordinator.";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_18 "Engine must keep running because of PSD (predictive route data). 0 = engine stop not prevented by PSD, 1 = PSD prevents engine stop";
+CM_ SG_ 1654 StSt_Koord_Stoppverbot_Anz_19 "Engine must keep running because of short-stop detection. 0 = engine stop not prevented by short-stop detection, 1 = short-stop detection prevents engine stop";
+CM_ SG_ 1654 MO_StaGluehk "Glow plug heating duty in percent";
+CM_ BO_ 980 "Steering column switch module (stalks). On the powertrain CAN (gateway harness bus 1), sent about once a second and on change. BH_Blinker_li/re match carState blinkers on a 2016 Golf Mk7 (AU).";
+CM_ SG_ 980 WH_Intervall "Wiper stalk in intermittent position. Seen toggling on a 2016 Golf Mk7 (AU); not yet checked against rain.";
+CM_ SG_ 980 WH_WischerStufe2 "Wiper stalk in fast position. Seen toggling on a 2016 Golf Mk7 (AU); not yet checked against rain.";
+CM_ BO_ 1712 "Windscreen humidity/temperature sensor (behind the mirror). On a 2016 Golf Mk7 (AU): humidity 45-65 %, dew point 8-12 C, glass 15-23 C.";
+CM_ SG_ 1712 FS_Taupunkt "Dew point.";
+CM_ SG_ 1712 FS_Temp_Scheibe "Windscreen glass temperature. Glass at or below FS_Taupunkt means the screen can mist up.";
+CM_ SG_ 1712 FS_Luftfeuchte_rel "Relative humidity at the windscreen.";
+CM_ BO_ 1162 "How far ahead the camera sees each lane line (BV_Linie_01..04 = own lane left, own lane right, next line out left, next line out right). 0 when the line is not seen; up to 100 m on a 2016 Golf Mk7 (AU).";
 CM_ SG_ 262 ESP_Autohold_Standby "Auto Hold switched on (button LED). Stays on across drives on a 2016 Golf Mk7 (AU).";
 CM_ SG_ 262 ESP_Autohold_aktiv "Auto Hold is holding the car. Only with ACC off: at a stop the driver can lift off the brake and the ESP holds. With ACC on the ESP holds the car for ACC instead and this stays 0 (only ESP_Haltebestaetigung is set). Seen on 190 stops on a 2016 Golf Mk7 (AU).";
 CM_ SG_ 1123 PSD_Attribut_1_ID "Attribute type. Seen on a 2016 Golf Mk7 (AU), checked against OpenStreetMap on 47 drives: 3 = roundabout (value 1 at the entry, 93% within 35 m of a mapped roundabout; 0 at the exit, 84%), 10 = right of way at the junction ahead (value 8 = roundabout, 93%; 1 and 2 unconfirmed), 11 = traffic lights (value 1, 62% at mapped signals, 71% at signalised crossings), 14 = also at traffic lights (value 1, 84%; exact meaning unclear); 4 is likely carriageway separation (1 on freeways and main roads, 2 on undivided country and district roads); 2 is likely a road class rank (5 freeway/main, 2 main/country, 1 country/district, 0 local/unpaved); 6 and 15 are freeway road properties (6 = 0 seen on ramps); 7, 17 and others are not identified yet.";
@@ -1799,41 +2234,6 @@ CM_ SG_ 870 Right_Turn_Exterior_Bulb_1 "Probably front";
 CM_ SG_ 870 Left_Turn_Exterior_Bulb_2 "Probably rear";
 CM_ SG_ 870 Right_Turn_Exterior_Bulb_2 "Probably rear";
 CM_ SG_ 870 Fast_Send_Rate_Active "CAN message send rate";
-CM_ BO_ 385 "Front camera traffic sign recognition, speed limit signs as shown on the cluster. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 (AU, km/h) against map speed limits. Values seen 40-60 only, so the field width/scale above 60 is assumed.";
-CM_ SG_ 385 Status "3 once a sign has been recognised, 0 before the first sign.";
-CM_ SG_ 385 SpeedLimit_1 "Main speed limit sign, 0 = none.";
-CM_ SG_ 385 SpeedLimit_2 "Probably a second sign shown alongside the first (seen as 40 with a 50 main sign, e.g. a school zone).";
-CM_ SG_ 385 SpeedLimit_1_Conditional "Probably a supplementary plate (time/condition, e.g. school zone hours) on SpeedLimit_1.";
-CM_ SG_ 385 SpeedLimit_2_Conditional "Probably a supplementary plate on SpeedLimit_2.";
-CM_ BO_ 668 "Front camera traffic sign recognition: same signs as Kamera_SpeedLimit_01 without the status bits. Undocumented (name is not from the VW matrix).";
-CM_ BO_ 806 "Front camera lane line model, own lane, left line. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 and checked against openpilot modelV2 lane lines. 12.5 Hz, no checksum/counter. An empty slot reads Offset/Heading/Curvature raw 2048/2048/2047 with Unknown_12 = 0.";
-CM_ SG_ 806 Offset "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
-CM_ SG_ 806 Heading "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
-CM_ SG_ 806 Curvature "Line curvature, positive = bending left. r=0.85 vs model (own-lane lines); scale approximate.";
-CM_ SG_ 806 Unknown_12 "0 when no line; 51-315 when a line is tracked. Does not track line probability or speed.";
-CM_ SG_ 806 Unknown_33 "Centred on 2047; small variation, not matched to model geometry (possibly curvature rate).";
-CM_ SG_ 806 Unknown_57 "0 when no line; roughly 10-47 when a line is tracked. Meaning unknown.";
-CM_ BO_ 807 "Front camera lane line model, own lane, right line. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 and checked against openpilot modelV2 lane lines. 12.5 Hz, no checksum/counter. An empty slot reads Offset/Heading/Curvature raw 2048/2048/2047 with Unknown_12 = 0.";
-CM_ SG_ 807 Offset "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
-CM_ SG_ 807 Heading "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
-CM_ SG_ 807 Curvature "Line curvature, positive = bending left. r=0.85 vs model (own-lane lines); scale approximate.";
-CM_ SG_ 807 Unknown_12 "0 when no line; 51-315 when a line is tracked. Does not track line probability or speed.";
-CM_ SG_ 807 Unknown_33 "Centred on 2047; small variation, not matched to model geometry (possibly curvature rate).";
-CM_ SG_ 807 Unknown_57 "0 when no line; roughly 10-47 when a line is tracked. Meaning unknown.";
-CM_ BO_ 808 "Front camera lane line model, next line out to the left. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 and checked against openpilot modelV2 lane lines. 12.5 Hz, no checksum/counter. An empty slot reads Offset/Heading/Curvature raw 2048/2048/2047 with Unknown_12 = 0.";
-CM_ SG_ 808 Offset "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
-CM_ SG_ 808 Heading "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
-CM_ SG_ 808 Curvature "Line curvature, positive = bending left. r=0.85 vs model (own-lane lines); scale approximate.";
-CM_ SG_ 808 Unknown_12 "0 when no line; 51-315 when a line is tracked. Does not track line probability or speed.";
-CM_ SG_ 808 Unknown_33 "Centred on 2047; small variation, not matched to model geometry (possibly curvature rate).";
-CM_ SG_ 808 Unknown_57 "0 when no line; roughly 10-47 when a line is tracked. Meaning unknown.";
-CM_ BO_ 809 "Front camera lane line model, next line out to the right. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 and checked against openpilot modelV2 lane lines. 12.5 Hz, no checksum/counter. An empty slot reads Offset/Heading/Curvature raw 2048/2048/2047 with Unknown_12 = 0.";
-CM_ SG_ 809 Offset "Lateral distance to the line, positive = left. r=0.95 vs model (own-lane lines).";
-CM_ SG_ 809 Heading "Line angle relative to the car, positive = pointing left. r=0.76 vs model (own-lane lines).";
-CM_ SG_ 809 Curvature "Line curvature, positive = bending left. r=0.85 vs model (own-lane lines); scale approximate.";
-CM_ SG_ 809 Unknown_12 "0 when no line; 51-315 when a line is tracked. Does not track line probability or speed.";
-CM_ SG_ 809 Unknown_33 "Centred on 2047; small variation, not matched to model geometry (possibly curvature rate).";
-CM_ SG_ 809 Unknown_57 "0 when no line; roughly 10-47 when a line is tracked. Meaning unknown.";
 CM_ SG_ 919 LDW_DLC "Probable DLC (distance to line crossing)";
 CM_ SG_ 919 LDW_TLC "Probable TLC (time to line crossing)";
 CM_ SG_ 919 LDW_Unknown "Might be a steering pressed / driver active flag";
@@ -1868,6 +2268,226 @@ CM_ SG_ 1720 KBI_Variante "Zeigt an ob es sich um ein konventionelles Zeiger-Kom
 CM_ SG_ 1720 KBI_Variante_USA "In diesem Signal wird die HW-Variante des Kombis ausgegeben, ACC plausibilisiert auf dieses Signal hin seine US-Codierung";
 
 
+VAL_ 1440 LS_Helligkeit_IR 254 "Init" 255 "error" ;
+VAL_ 1440 LS_Helligkeit_FW 1022 "Init" 1023 "error" ;
+VAL_ 1440 LS_defekt 0 "OK" 1 "faulty" ;
+VAL_ 1440 LS_Verbau 0 "Init" 1 "Lichtsensor_fitted" ;
+VAL_ 1440 RS_Regenmenge 0 "0" 1 "0,0 to 0,3" 2 "0,31 to 1,4" 3 "1,41 to 2,0" 4 "2,01 to 2,8" 5 "2,81 to 3,3" 6 "3,31 to 4,0" 7 "4,01 to 5,0" 8 "5,01 to 7,0" 9 "7,01 to 9,0" 10 "9,01 to 11,0" 11 "11,01 to 15,0" 12 "15,01 to 22,0" 13 ">22,01" 14 "Init" 15 "error" ;
+VAL_ 1440 RS_Schwall 0 "Off" 1 "On" ;
+VAL_ 1440 RS_Verbau 0 "Init" 1 "Regensensor fitted" ;
+VAL_ 1440 RS_Verglasung_schliessen 0 "Verglasung not close" 1 "Verglasung close" ;
+VAL_ 1440 RS_defekt 0 "OK" 1 "faulty" ;
+VAL_ 1440 RS_Wischergeschwindigkeit 0 "no wiping" 1 "42 Huebe/min" 2 "45 Huebe/min" 3 "48 Huebe/min" 4 "51 Huebe/min" 5 "54 Huebe/min" 6 "57 Huebe/min" 7 "60 Huebe/min" ;
+VAL_ 1440 RLS_Vorfeldhelligkeit_Boost 0 "greater_24413_Lux" 1 "to_24413_Lux" 2 "to_22193_Lux" 3 "to_20176_Lux" 4 "to_18342_Lux" 5 "to_16647_Lux" 6 "to_15158_Lux" 7 "to_13780_Lux" 8 "to_12527_Lux" 9 "to_11388_Lux" 10 "to_10353_Lux" 11 "to_9412_Lux" 12 "to_8556_Lux" 13 "to_7778_Lux" 14 "to_7071_Lux" 15 "to_6428_Lux" ;
+VAL_ 1624 LV_Standlicht_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_Abblendlicht_Anzeige 0 "inactive" 1 "active" ;
+VAL_ 1624 LV_Fernlicht_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_Nebellicht_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_Nebelschlusslicht_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_Tagfahrlicht_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_AFL_aktiv_Anzeige 0 "not active" 1 "active" ;
+VAL_ 1624 LV_AFL_defekt 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Blinker_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Standlicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblendlicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Fernlicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Nebellicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Blk_li_Seite_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Tagfahrlicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_FLA_aktiv_Anzeige 0 "off" 1 "on" ;
+VAL_ 1624 LV_FLA_defekt 0 "i.O." 1 "FLA faulty" ;
+VAL_ 1624 LV_FLA_Sensor_blockiert 0 "i.O." 1 "FLA-Sensor blocked" ;
+VAL_ 1624 LV_Blinker_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Standlicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblendlicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Fernlicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Nebellicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Blk_re_Seite_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Tagfahrlicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Aussenlicht_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblendlicht_TFL_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Nebellicht_TFL_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Standlicht_TFL_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblend_Fernlicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblendlicht_TFL_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Nebellicht_TFL_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Standlicht_TFL_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abblend_Fernlicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abbiegelicht_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Abbiegelicht_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 BCM1_Linksverkehr 0 "right_hand_traffic" 1 "left_hand_traffic" ;
+VAL_ 1624 BCM1_Licht_Dunkelheit_aktiv 0 "inactive" 1 "active" ;
+VAL_ 1624 LV_LED_Scheinwerfer_li_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_LED_Scheinwerfer_re_def 0 "OK" 1 "faulty" ;
+VAL_ 1624 LV_Blinker_VL_aktiv 0 "inactive" 1 "active" ;
+VAL_ 1624 LV_Blinker_VR_aktiv 0 "inactive" 1 "active" ;
+VAL_ 1624 LV_MXB_Status_Anzeige 0 "MXB_off" 1 "MXB_controlling" 2 "MXB_volles_high_beam" 3 "MXB_and_Laser_active" ;
+VAL_ 263 MO_rel_Ladedruck 255 "error" ;
+VAL_ 263 MO_Effizienzmodus 0 "not_in_Effizienz_mode" 1 "Effizienz_mode" ;
+VAL_ 869 BEM_UBDM 0 "Init" 255 "error" ;
+VAL_ 869 NVEM_Ladefreigabe 0 "no_enable" 1 "enable_level_1" 2 "enable_level_2" 3 "Uneingeschraenkte_enable" ;
+VAL_ 869 NVEM_FMAus_Info 0 "engine_running_long_term_not_required_FM_off_enable" 1 "engine_cranking_not_mandatory_required_stop_prohibited_no_start_request" 2 "engine_cranking_mandatory_required_start_request" 3 "system_error" ;
+VAL_ 1646 KL_Geblaese_Status 0 "Geblaese_off" 1 "Geblaesestufe_10" 2 "Geblaesestufe_20" 3 "Geblaesestufe_30" 4 "Geblaesestufe_40" 5 "Geblaesestufe_50" 6 "Geblaesestufe_60" 7 "Geblaesestufe_70" 8 "Geblaesestufe_80" 9 "Geblaesestufe_90" 10 "Geblaesestufe_100" 14 "Init" 15 "error" ;
+VAL_ 1646 KL_Innen_Temp 253 "not_fitted" 254 "not_available" 255 "error" ;
+VAL_ 1175 PH_Visualisierung 0 "Off" 1 "Angefragt" 2 "InAnzeige" 3 "Abgefordert" 6 "Init" 7 "error" ;
+VAL_ 1175 PDC_Tonausgabe_Front 0 "no_Ton" 1 "Intervallton_1" 2 "Intervallton_2" 3 "Intervallton_3" 4 "Intervallton_4" 5 "Intervallton_5" 6 "Dauerton" 7 "Fehlerton" 8 "RCTATon" ;
+VAL_ 1175 PDC_Tonausgabe_Heck 0 "no_Ton" 1 "Intervallton_1" 2 "Intervallton_2" 3 "Intervallton_3" 4 "Intervallton_4" 5 "Intervallton_5" 6 "Dauerton" 7 "Fehlerton" 8 "Erstwarnton_rear" 9 "RCTATon" ;
+VAL_ 1175 PH_nachtr_Stopp_Anf 0 "not_requested" 1 "requested" ;
+VAL_ 1175 PH_Abschaltursache 0 "no, or. System active" 1 "shutdown by Herausnahme R-gear" 2 "shutdown over speed" 3 "shutdown over PDC-button" 4 "shutdown due_to PLA" 5 "shutdown by KL 15 Bit = 0" 6 "tbd." 7 "error-/gestört state, System noch active" ;
+VAL_ 1175 PH_Opt_Anzeige_V_ein 0 "optische display front not active" 1 "optische display front activated" ;
+VAL_ 1175 PH_Opt_Anzeige_H_ein 0 "Optische display off" 1 "optische display rear activated" ;
+VAL_ 1175 PH_Opt_Anz_V_Hindernis 0 "optische display front meldet no obstacle" 1 "optische display front meldet obstacle in Warnbereich" ;
+VAL_ 1175 PH_Opt_Anz_H_Hindernis 0 "optische display rear meldet no obstacle" 1 "optische display rear meldet obstacle in Warnbereich" ;
+VAL_ 1175 PH_Tongeber_V_aktiv 0 "Tongeber front not active" 1 "Tongeber front  active" ;
+VAL_ 1175 PH_Tongeber_H_aktiv 0 "Tongeber rear not active" 1 "Tongeber rear active" ;
+VAL_ 1175 PH_Tongeber_mute 0 "Tongeber not stummgeschaltet" 1 "Tongeber stummgeschaltet" ;
+VAL_ 1175 PH_Anf_Audioabsenkung 0 "No_Audioabsenkung" 1 "request_Audioabsenkung" ;
+VAL_ 1175 PH_Tongeber_H_verfuegbar 0 "not available" 1 "available" ;
+VAL_ 1175 PLA_Anf_Aufschaltung_RVC 0 "No_RVC_Aufschalteanf" 1 "RVC_Aufschalteanforderung" ;
+VAL_ 1175 PH_Taster 0 "button_not_pressed" 1 "button_pressed" 2 "reserved" 3 "error" ;
+VAL_ 1175 PH_Anf_Verdeck 0 "soft_top_operation_enabled" 1 "soft_top_operation_lock" 2 "reserved" 3 "reserved" ;
+VAL_ 1175 PH_StartStopp_Info 0 "engine_running_not_required_(stop_enabled)" 1 "engine_cranking_not_mandatory_required_(stop_prohibited,no_start_request)" 2 "engine_cranking_mandatory_required_(start_request)" 3 "system_error" ;
+VAL_ 1175 PH_Stoermeldung 0 "no_display_no_Gong" 1 "text_message_PDC_rear_faulty_with_Gong" 2 "text_message_PDC_rear_faulty_without_Gong" 3 "text_message_PDC_front_faulty_with_Gong" 4 "text_message_PDC_front_faulty_without_Gong" 5 "text_message_PDC_faulty_with_Gong" 6 "text_message_PDC_faulty_without_Gong" 7 "text_message_PDC_seitlich_faulty_with_Gong" 8 "text_message_PDC_seitlich_faulty_without_Gong" ;
+VAL_ 1175 PH_defekt 0 "PH active" 1 "PH wurde aufgrund eines Defektes deactivated" ;
+VAL_ 1175 PH_gestoert 0 "PH active" 1 "PH wurde on reason one fault tempraer deactivated" ;
+VAL_ 1175 PH_Systemzustand 0 "Anlage off" 1 "Anlage by engage R-gear activated" 2 "Anlage manual by button activated" 3 "Anlage automatisch activated" 4 "Anlage by ARA activated" 6 "Init - Initialisierungsphase after Kl. 15 on / Reset" 7 "error-/gestört state, System noch active" ;
+VAL_ 1175 PH_Display_Kundenwunsch 0 "display off" 1 "graphic" 2 "Rear View" 3 "automatisch" ;
+VAL_ 2589283745 RDR_QBit_Objekte 0 "valid_value" 1 "substitute_Init_or_error_value" ;
+VAL_ 2589283745 RDR_RNS2_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_RNS1_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_LNS2_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_WZO_GeschwAbsX 127 "Init" ;
+VAL_ 2589283745 RDR_WZO_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_VZO_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_RNS1_GeschwAbsX 127 "Init" ;
+VAL_ 2589283745 RDR_LNS1_PositionX 63 "Init" ;
+VAL_ 2589283745 RDR_LNS1_GeschwAbsX 127 "Init" ;
+VAL_ 896 US_Sende_Modus 0 "no_for_the_ACC_SG_relevant_distance_values_be_sent" 1 "4K_ext_range__10_signal_paths_available__4m" 2 "4K_norm_range__10_signal_paths_available__2m" 3 "6K_ext_range__16_signal_paths_available__4m" 4 "6K_norm_range__16_signal_paths_available__2m" 5 "2K_ext_range__2_signal_paths_available__4m" 6 "mode_switch__ext_>_norm__or__norm_>_ext" 7 "blindness_check" 8 "4K_ext_range__12_signal_paths_available_4m" 9 "4K_norm_range__12_signal_paths_available_2m" 10 "6K_ext_range__18_signal_paths_available_4m" 11 "6K_norm_range__18_signal_paths_available_2m" 15 "error" ;
+VAL_ 896 US_relevanter_Fehler 0 "no_relevant_error" 1 "relevant_error" ;
+VAL_ 896 US_relevante_Nichtverfuegbarkeit 0 "available" 1 "not_available" ;
+VAL_ 896 US_Freisicht_nio 0 "clear_view_OK" 1 "clear_view_not_OK" ;
+VAL_ 896 US_blindness_detected 0 "blindness_not_detected" 1 "blindness_detected" ;
+VAL_ 896 US_Sende_Modus_hinten 0 "no_for_the_ACC_SG_relevant_distance_values_be_sent" 5 "2K_ext_range__2_signal_paths_available__4m" 6 "mode_switch__ext_>_norm__or__norm_>_ext" 7 "blindness_check" 15 "error" ;
+VAL_ 896 US_Freie_Weglaenge_Heck_Typ 0 "maximum_measuring_range" 1 "obstacle_detected" ;
+VAL_ 896 US_Freie_Weglaenge_Heck 510 "Init" 511 "error" ;
+VAL_ 896 APS_Master_Sendestatus 0 "slow_cycle_time_active" 1 "fast_cycle_time_active" ;
+VAL_ 896 US_Freie_Weglaenge_Front_Typ 0 "maximum_measuring_range" 1 "obstacle_detected" ;
+VAL_ 896 US_Freie_Weglaenge_Front 509 "free_path_length_greater_5m" 510 "Init" 511 "error" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_09 0 "no_display" 1 "traffic_light_Info" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_10 0 "no_display" 1 "Race_Mode" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_11 0 "no_display" 1 "restart_PEA" ;
+VAL_ 1654 MO_Wiederstart_Anz_01 0 "no_display" 1 "engine_temperature" ;
+VAL_ 1654 MO_Wiederstart_Anz_02 0 "no_display" 1 "BKV_vacuum" ;
+VAL_ 1654 MO_Wiederstart_Anz_03 0 "no_display" 1 "SCR_System" ;
+VAL_ 1654 MO_Wiederstart_Anz_Std 0 "no_display" 1 "Standard_restart_reason" ;
+VAL_ 1654 MO_Stoppverbot_Anz_01 0 "no_display" 1 "exhaust_system" ;
+VAL_ 1654 MO_Stoppverbot_Anz_02 0 "no_display" 1 "engine_temperature_Min" ;
+VAL_ 1654 MO_Stoppverbot_Anz_03 0 "no_display" 1 "engine_temperature_Max" ;
+VAL_ 1654 MO_Stoppverbot_Anz_04 0 "no_display" 1 "ambient_air_density" ;
+VAL_ 1654 MO_Stoppverbot_Anz_05 0 "no_display" 1 "brake_vacuum" ;
+VAL_ 1654 MO_Stoppverbot_Anz_06 0 "no_display" 1 "adaptations" ;
+VAL_ 1654 MO_Stoppverbot_Anz_07 0 "no_display" 1 "gear_sensor" ;
+VAL_ 1654 MO_Stoppverbot_Anz_08 0 "no_display" 1 "diagnosis_tank_venting" ;
+VAL_ 1654 MO_Stoppverbot_Anz_09 0 "no_display" 1 "FlexFuel_SCR_CNG" ;
+VAL_ 1654 MO_Stoppverbot_Anz_10 0 "no_display" 1 "OPF_DPF_Regeneration" ;
+VAL_ 1654 MO_Stoppverbot_Anz_11 0 "no_display" 1 "sporadic_stop_prevention" ;
+VAL_ 1654 MO_Stoppverbot_Anz_Std 0 "no_display" 1 "Standard_stop_veto_reason" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_20 0 "traffic_light_prevents_engine_stop_not" 1 "traffic_light_prevents_engine_stop" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_21 0 "Race_Mode_prevents_engine_stop_not" 1 "Race_Mode_prevents_engine_stop" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_Std 0 "no_display" 1 "Standard_restart_reason" ;
+VAL_ 1654 StSt_Koord_Status_Bremspedalkzpt 0 "brake_pedal_start_possible" 1 "no_brake_pedal_start_possible" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_01 0 "no_display" 1 "clutch_brake" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_02 0 "no_display" 1 "accelerator_pedal" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_03 0 "no_display" 1 "button" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_04 0 "no_display" 1 "shifting_after_R" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_05 0 "no_display" 1 "rolling_start" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_06 0 "no_display" 1 "emergency_start" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_07 0 "no_display" 1 "steering_wheel" ;
+VAL_ 1654 StSt_Koord_Wiederstart_Anz_08 0 "no_display" 1 "Offroad_Sport_and_ESP_button" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_01 0 "no_display" 1 "vehicle_tilt" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_02 0 "no_display" 1 "repeat_stop_lock" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_03 0 "no_display" 1 "manoeuvre_detection_MQ_DQ" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_04 0 "no_display" 1 "tamper_protection" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_05 0 "no_display" 1 "button_start_stop_switched_off" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_06 0 "no_display" 1 "bonnet" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_07 0 "no_display" 1 "driver_seatbelt" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_08 0 "no_display" 1 "driver_door" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_09 0 "no_display" 1 "accelerator_pedal" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_10 0 "no_display" 1 "steering_angle_steering_angle_rate" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_11 0 "no_display" 1 "trailer" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_12 0 "no_display" 1 "immobiliser_active" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_13 0 "no_display" 1 "permanent_driver_absent" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_14 0 "no_display" 1 "temporary_driver_absent" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_15 0 "no_display" 1 "Offroad_Sport_and_ESP_button" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_16 0 "no_display" 1 "neutral_gear" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_17 0 "driver_action_prevents_engine_stop_not" 1 "missing_driver_action_prevents_engine_stop" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_Std 0 "no_display" 1 "Standard_stop_veto_reason" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_18 0 "PSD_prevents_engine_stop_not" 1 "PSD_prevents_engine_stop" ;
+VAL_ 1654 StSt_Koord_Stoppverbot_Anz_19 0 "short_stop_prevents_engine_stop_not" 1 "short_stop_prevents_engine_stop" ;
+VAL_ 1654 MO_StaGluehk 15 "error" ;
+VAL_ 385 VZE_Anzeigemodus 0 "EU_RDW" 1 "USA" 2 "Canada" 3 "China" ;
+VAL_ 385 VZE_Hinweistext 0 "no_notice_text" ;
+VAL_ 385 VZE_Akustik_Limitwechsel 0 "no_acoustic_signal" 1 "acoustic_signal_on" ;
+VAL_ 385 VZE_Modus_OptischeWarnung 0 "constant" 1 "flashing" ;
+VAL_ 385 VZE_Anzeigeunterdrueck_Zeichen_3 0 "display_relevant" 1 "not_display_relevant" ;
+VAL_ 385 VZE_Anzeigeunterdrueck_Zeichen_2 0 "display_relevant" 1 "not_display_relevant" ;
+VAL_ 385 VZE_Verkehrszeichen_1 0 "no_traffic_sign" ;
+VAL_ 385 VZE_Verkehrszeichen_2 0 "no_traffic_sign" ;
+VAL_ 385 VZE_Verkehrszeichen_3 0 "no_traffic_sign" ;
+VAL_ 385 VZE_Warnung_Verkehrszeichen_1 0 "no_warning_initial_value_error_value" 1 "warning" ;
+VAL_ 385 VZE_Warnung_Verkehrszeichen_2 0 "no_warning_initial_value_error_value" 1 "warning" ;
+VAL_ 385 VZE_Warnung_Verkehrszeichen_3 0 "no_warning_initial_value_error_value" 1 "warning" ;
+VAL_ 385 VZE_Zusatzschild_1 0 "no_supplementary_sign_initial_value_error_value" ;
+VAL_ 385 VZE_Zusatzschild_2 0 "no_supplementary_sign_initial_value_error_value" ;
+VAL_ 385 VZE_Zusatzschild_3 0 "no_supplementary_sign_initial_value_error_value" ;
+VAL_ 385 VZE_Anzeigeunterdrueck_Zeichen_1 0 "display_relevant" 1 "not_display_relevant" ;
+VAL_ 385 VZE_Zeichen_01_KameraWied 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_02_KameraWied 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_03_KameraWied 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_01_Kamera 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Zeichen_01_Karte 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_01_Gesetz 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Zeichen_02_Kamera 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Zeichen_02_Karte 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_02_Gesetz 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Zeichen_03_Kamera 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Zeichen_03_Karte 0 "inactive" 1 "active" ;
+VAL_ 385 VZE_Zeichen_03_Gesetz 0 "not_detected" 1 "detected" ;
+VAL_ 385 VZE_Gong 0 "Gong_inactive" 1 "Gong_active" ;
+VAL_ 668 VZE_Akustik_Limitwechsel_Status 0 "no_acoustic_signal" 1 "acoustic_signal_on" ;
+VAL_ 668 VZE_SLWF_Status 0 "Init" 1 "active" 2 "inactive" ;
+VAL_ 668 VZE_Anzeigeunterdrueck_Zeichen_5 0 "display_relevant" 1 "not_display_relevant" ;
+VAL_ 668 VZE_Zeichen_05_KameraWied 0 "inactive" 1 "active" ;
+VAL_ 668 VZE_Zeichen_05_Kamera 0 "not_detected" 1 "detected" ;
+VAL_ 668 VZE_Verkehrszeichen_4 0 "no_traffic_sign" ;
+VAL_ 668 VZE_Verkehrszeichen_5 0 "no_traffic_sign" ;
+VAL_ 668 VZE_Anhaenger_Vmax 14 "Init" 15 "error" ;
+VAL_ 668 VZE_Zeichen_04_Gesetz 0 "not_detected" 1 "detected" ;
+VAL_ 668 VZE_Zeichen_04_Kamera 0 "not_detected" 1 "detected" ;
+VAL_ 668 VZE_Zeichen_04_KameraWied 0 "inactive" 1 "active" ;
+VAL_ 668 VZE_Zeichen_04_Karte 0 "inactive" 1 "active" ;
+VAL_ 668 VZE_Warnung_Verkehrszeichen_4 0 "no_warning_initial_value_error_value" 1 "warning" ;
+VAL_ 668 VZE_Warnung_Verkehrszeichen_5 0 "no_warning_initial_value_error_value" 1 "warning" ;
+VAL_ 668 VZE_Zeichen_05_Gesetz 0 "not_detected" 1 "detected" ;
+VAL_ 668 VZE_Zusatzschild_4 0 "no_supplementary_sign_initial_value_error_value" ;
+VAL_ 668 VZE_Zusatzschild_5 0 "no_supplementary_sign_initial_value_error_value" ;
+VAL_ 668 VZE_Baustelle 0 "No_roadworks" 1 "roadworks_detected" ;
+VAL_ 668 VZE_Zeichen_05_Karte 0 "inactive" 1 "active" ;
+VAL_ 668 VZE_Zeichen_05_Entfernung 0 "Init" ;
+VAL_ 668 VZE_Zeichen_05_Entfernung_StdA 0 "Init" ;
+VAL_ 668 VZE_Anzeigeunterdrueck_Zeichen_4 0 "display_relevant" 1 "not_display_relevant" ;
+VAL_ 806 BV_Linie_01_Farbe 0 "no_line" 1 "white" 2 "red" 3 "yellow" 4 "other" 5 "not_defined" 6 "not_defined" 7 "not_defined" ;
+VAL_ 806 BV_Linie_01_Liniennummer 0 "no_line" ;
+VAL_ 806 BV_Linie_01_Typ 0 "no_line" 1 "solid" 2 "dashed" 3 "kerb" 4 "grass" 5 "Botts_dots" 6 "other" 7 "not_defined" ;
+VAL_ 807 BV_Linie_02_Farbe 0 "no_line" 1 "white" 2 "red" 3 "yellow" 4 "other" 5 "not_defined" 6 "not_defined" 7 "not_defined" ;
+VAL_ 807 BV_Linie_02_Liniennummer 0 "no_line" ;
+VAL_ 807 BV_Linie_02_Typ 0 "no_line" 1 "solid" 2 "dashed" 3 "kerb" 4 "grass" 5 "Botts_dots" 6 "other" 7 "not_defined" ;
+VAL_ 808 BV_Linie_03_Farbe 0 "no_line" 1 "white" 2 "red" 3 "yellow" 4 "other" 5 "not_defined" 6 "not_defined" 7 "not_defined" ;
+VAL_ 808 BV_Linie_03_Liniennummer 0 "no_line" ;
+VAL_ 808 BV_Linie_03_Typ 0 "no_line" 1 "solid" 2 "dashed" 3 "kerb" 4 "grass" 5 "Botts_dots" 6 "other" 7 "not_defined" ;
+VAL_ 809 BV_Linie_04_Farbe 0 "no_line" 1 "white" 2 "red" 3 "yellow" 4 "other" 5 "not_defined" 6 "not_defined" 7 "not_defined" ;
+VAL_ 809 BV_Linie_04_Liniennummer 0 "no_line" ;
+VAL_ 809 BV_Linie_04_Typ 0 "no_line" 1 "solid" 2 "dashed" 3 "kerb" 4 "grass" 5 "Botts_dots" 6 "other" 7 "not_defined" ;
 VAL_ 159 EPS_HCA_Status 0 "disabled" 1 "initializing" 2 "fault" 3 "ready" 4 "rejected" 5 "active" 8 "preempted" ;
 VAL_ 159 EPS_AWA_Status 0 "AWA_deaktiviert" 1 "AWA_Anf_nicht_ausfuehrbar" 2 "Kom_AWA_gestoert" 3 "EPS_bzgl_AWA_funktionsbereit" 4 "AWA_Anf_abgewiesen" 5 "AWA_Momeingriff_1_aktiv" 7 "AWA_Momeingriff_2_aktiv" 8 "AWA_abgewiesen_Momentenpriorisierung" 9 "Anf_abgewiesen_Bedienueblich" 14 "Init" ;
 VAL_ 173 GE_Fahrstufe 5 "P" 6 "R" 7 "N" 8 "D" 9 "S" 10 "E" 13 "T" 14 "T" ;
