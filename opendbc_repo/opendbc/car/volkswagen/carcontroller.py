@@ -34,6 +34,7 @@ class CarController(CarControllerBase):
     self.steering_power_last = 0
     self.accel_last = 0.
     self.stopping_distance = None
+    self.set_speed_reached = False
     self.lead_distance_bars_last = None
     self.lead_icon = mqbcan.LeadIcon(self.CCP.ACC_HUD_STEP * DT_CTRL)
     self.distance_bar_frame = 0
@@ -203,8 +204,13 @@ class CarController(CarControllerBase):
         # FIXME: PQ may need to use the on-the-wire mph/kmh toggle to fix rounding errors
         # FIXME: Detect clusters with vEgoCluster offsets and apply an identical vCruiseCluster offset
         set_speed = hud_control.setSpeed * CV.MS_TO_KPH
+        hud_kwargs = {}
+        if self.CCS is mqbcan:
+          self.set_speed_reached = mqbcan.set_speed_reached(self.set_speed_reached, acc_hud_status in (3, 4),
+                                                            CS.out.vEgo * CV.MS_TO_KPH, set_speed)
+          hud_kwargs = {"speed_reached": self.set_speed_reached}
         can_sends.append(self.CCS.create_acc_hud_control(self.packer_pt, self.CAN.pt, acc_hud_status, set_speed,
-                                                         lead_distance, hud_control.leadDistanceBars))
+                                                         lead_distance, hud_control.leadDistanceBars, **hud_kwargs))
 
     # **** Stock ACC Button Controls **************************************** #
 
