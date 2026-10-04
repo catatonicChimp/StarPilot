@@ -202,10 +202,31 @@ class LeadIcon:
     return int(round(self.position))
 
 
-def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance, distance):
+# Stock ACC (2016 Golf Mk7) keeps the speedometer set-speed marker (ACC_Tachokranz) on whenever it is engaged, and flags
+# "set speed reached" once the car is within ~3 km/h of the set speed. It drops the flag ~7 km/h below the set speed,
+# and it is off while well above it (e.g. 45.8 km/h with a 40 km/h set speed). Stock also waits ~2 s after engaging or a
+# set speed change before setting it; that delay isn't copied.
+SET_SPEED_REACHED_ON = 3.0  # km/h either side of the set speed
+SET_SPEED_REACHED_OFF_BELOW = 7.0  # km/h below the set speed
+SET_SPEED_REACHED_OFF_ABOVE = 5.0  # km/h above the set speed
+
+
+def set_speed_reached(reached, engaged, v_ego_kph, set_speed_kph):
+  if not engaged:
+    return False
+  if abs(v_ego_kph - set_speed_kph) <= SET_SPEED_REACHED_ON:
+    return True
+  if v_ego_kph < set_speed_kph - SET_SPEED_REACHED_OFF_BELOW or v_ego_kph > set_speed_kph + SET_SPEED_REACHED_OFF_ABOVE:
+    return False
+  return reached
+
+
+def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance, distance, speed_reached=False):
   values = {
     "ACC_Status_Anzeige": acc_hud_status,
     "ACC_Wunschgeschw_02": set_speed if set_speed < 250 else 327.36,
+    "ACC_Tachokranz": 1 if acc_hud_status in (3, 4) else 0,
+    "ACC_Wunschgeschw_erreicht": 1 if speed_reached else 0,
     "ACC_Gesetzte_Zeitluecke": distance + 2,
     "ACC_Display_Prio": 3,
     "ACC_Abstandsindex": lead_distance,

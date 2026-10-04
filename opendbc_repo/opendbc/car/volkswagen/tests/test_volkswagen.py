@@ -308,3 +308,33 @@ class TestVolkswagenMqbStoppingDistance:
     assert hold_type(stopping=True, starting=False, esp_hold=True) == 1
     assert hold_type(stopping=False, starting=True, esp_hold=True) == 4
     assert hold_type(stopping=False, starting=False, esp_hold=False) == 0
+
+
+class TestVolkswagenMqbSetSpeedMarker:
+  def hud(self, status, reached=False):
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+    dat = int.from_bytes(bytes(mqbcan.create_acc_hud_control(packer, 0, status, 50., 0, 1, speed_reached=reached)[1]), 'little')
+    get = lambda name: (dat >> DBC_PARSED.name_to_msg["ACC_02"].sigs[name].start_bit) & 1
+    return get("ACC_Tachokranz"), get("ACC_Wunschgeschw_erreicht")
+
+  def test_marker_on_while_engaged(self):
+    # Stock radar keeps the speedometer set-speed marker on while engaged (3) or overridden (4), off otherwise
+    assert self.hud(3)[0] == 1 and self.hud(4)[0] == 1
+    assert self.hud(2)[0] == 0 and self.hud(0)[0] == 0 and self.hud(6)[0] == 0
+    assert self.hud(3, reached=True)[1] == 1 and self.hud(3)[1] == 0
+
+  def test_reached_matches_stock(self):
+    # (v_ego, set speed, stock ACC_Wunschgeschw_erreicht) from stock ACC on route 00000038, in order. Stock also waits
+    # ~2 s after engaging or a set speed change before setting it, which isn't modelled
+    trace = [(39.7, 40, 1), (39.5, 41.92, 1), (39.3, 41.92, 1), (34.6, 41.92, 0),
+             (47.1, 40, 0), (45.8, 40, 0), (44.6, 49.92, 0), (37.4, 40, 1)]
+    reached = False
+    for v, set_speed, stock in trace[:4]:
+      reached = mqbcan.set_speed_reached(reached, True, v, set_speed)
+      assert reached == bool(stock), (v, set_speed)
+    reached = False
+    for v, set_speed, stock in trace[4:7]:
+      reached = mqbcan.set_speed_reached(reached, True, v, set_speed)
+      assert reached == bool(stock), (v, set_speed)
+    assert mqbcan.set_speed_reached(False, True, 37.4, 40)
+    assert not mqbcan.set_speed_reached(True, False, 40, 40)
