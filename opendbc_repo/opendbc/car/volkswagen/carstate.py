@@ -43,14 +43,19 @@ class CarState(CarStateBase):
   def create_button_events(self, pt_cp, buttons):
     button_events = []
 
+    # Several signals can map to one event type (e.g. cancel and the O/I switch), so a type is pressed while any is
+    states: dict = {}
     for button in buttons:
-      state = pt_cp.vl[button.can_addr][button.can_msg] in button.values
-      if self.button_states[button.event_type] != state:
+      pressed = pt_cp.vl[button.can_addr][button.can_msg] in button.values
+      states[button.event_type] = states.get(button.event_type, False) or pressed
+
+    for event_type, state in states.items():
+      if self.button_states[event_type] != state:
         event = structs.CarState.ButtonEvent()
-        event.type = button.event_type
+        event.type = event_type
         event.pressed = state
         button_events.append(event)
-      self.button_states[button.event_type] = state
+      self.button_states[event_type] = state
 
     return button_events
 
