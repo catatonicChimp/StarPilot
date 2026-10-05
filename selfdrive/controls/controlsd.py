@@ -395,6 +395,8 @@ class Controls:
     self.pm = messaging.PubMaster(['carControl', 'controlsState', 'starpilotLateralState'])
 
     self.steer_limited_by_safety = False
+    self.cluster_lanes_visible = [False, False]  # left, right
+    self.cluster_lanes_pending = [0.0, 0.0]  # seconds the model has disagreed with the shown state
     self.curvature = 0.0
     self.desired_curvature = 0.0
     self.lc_smooth_release = 0.0
@@ -874,6 +876,19 @@ class Controls:
 
     hudControl.rightLaneVisible = True
     hudControl.leftLaneVisible = True
+    if self.CP.brand == "volkswagen":
+      # The VW cluster draws its lane lines from these, so follow the model's ego lane lines like the comma screen does.
+      # Same 0.5 threshold as LDW, dropping out below 0.4, and a line only changes once the model has agreed for 0.5 s,
+      # so brief dropouts don't blink the line on the cluster.
+      probs = self.sm['modelV2'].laneLineProbs
+      if self.sm.valid['modelV2'] and len(probs) >= 3:
+        for i, prob in enumerate((probs[1], probs[2])):
+          visible = prob > (0.4 if self.cluster_lanes_visible[i] else 0.5)
+          self.cluster_lanes_pending[i] = self.cluster_lanes_pending[i] + DT_CTRL if visible != self.cluster_lanes_visible[i] else 0.0
+          if self.cluster_lanes_pending[i] >= 0.5:
+            self.cluster_lanes_visible[i] = visible
+            self.cluster_lanes_pending[i] = 0.0
+      hudControl.leftLaneVisible, hudControl.rightLaneVisible = self.cluster_lanes_visible
     if self.sm.valid['driverAssistance']:
       hudControl.leftLaneDepart = self.sm['driverAssistance'].leftLaneDeparture
       hudControl.rightLaneDepart = self.sm['driverAssistance'].rightLaneDeparture
