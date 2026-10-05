@@ -864,6 +864,15 @@ class Controls:
     )
     if gm_dash_spoof_offsets_enabled:
       hud_set_speed = get_gm_hud_set_speed(hud_set_speed, self.starpilot_toggles)
+    if self.CP.brand == "volkswagen" and self.CP.openpilotLongitudinalControl:
+      # Show the speed openpilot is holding: an accepted speed limit below the set speed caps the planner without
+      # changing the set speed, so the cluster kept showing the old set speed. Same target as the planner's SLC
+      # (limit + offset, or the driver's override), in cluster units. Display only.
+      sp_plan = self.sm['starpilotPlan']
+      if sp_plan.slcSpeedLimit > 0:
+        slc_display_target = max(sp_plan.slcOverriddenSpeed, sp_plan.slcSpeedLimit + sp_plan.slcSpeedLimitOffset)
+        if 0 < slc_display_target < hud_set_speed:
+          hud_set_speed = slc_display_target
     hudControl.setSpeed = hud_set_speed
     hudControl.speedVisible = CC.enabled
     hudControl.lanesVisible = CC.enabled
