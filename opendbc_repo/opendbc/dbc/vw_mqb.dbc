@@ -618,9 +618,10 @@ BO_ 299 GRA_ACC_01: 8 Gateway_MQB
  SG_ GRA_Verstellung_Zeitluecke : 20|2@1+ (1,0) [0|3] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
  SG_ GRA_Codierung : 22|2@1+ (1,0) [0|3] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
  SG_ GRA_Fehler : 24|1@1+ (1,0) [0|1] "" Getriebe_DQ_Hybrid_MQB,Getriebe_DQ_MQB,Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
- SG_ GRA_Typ468 : 25|2@1+ (1,0) [0|3] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
- SG_ GRA_Tip_Stufe_2 : 27|1@1+ (1,0) [0|1] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
- SG_ GRA_ButtonTypeInfo : 28|2@1+ (1,0) [0|1] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
+ SG_ GRA_LIM_Taste_verfuegbar : 25|1@1+ (1,0) [0|1] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
+ SG_ GRA_Tip_Stufe_2 : 26|1@1+ (1,0) [0|1] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
+ SG_ GRA_ButtonTypeInfo : 27|3@1+ (1,0) [0|7] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
+ SG_ GRA_TravelAssist : 30|1@1+ (1,0) [0|1] "" Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
 
 BO_ 960 Klemmen_Status_01: 4 Gateway_MQB
  SG_ CHECKSUM : 0|8@1+ (1,0) [0|255] "" Airbag_MQB,BMS_MQB,Motor_Diesel_MQB,Motor_Hybrid_MQB,Motor_Otto_MQB
@@ -1358,8 +1359,7 @@ BO_ 286 ESP_08: 8 Gateway_MQB
 
 BO_ 919 LDW_02: 8 XXX
  SG_ LDW_Gong : 12|2@1+ (1,0) [0|3] ""  XXX
- SG_ LDW_SW_Warnung_links : 14|1@1+ (1,0) [0|1] ""  XXX
- SG_ LDW_SW_Warnung_rechts : 15|1@1+ (1,0) [0|1] ""  XXX
+ SG_ LDW_Frueh_Spaet : 14|2@1+ (1,0) [0|3] ""  XXX
  SG_ LDW_Texte : 16|4@1+ (1,0) [0|15] ""  XXX
  SG_ LDW_Seite_DLCTLC : 20|1@1+ (1,0) [0|1] ""  XXX
  SG_ LDW_Lernmodus : 21|3@1+ (1,0) [0|7] ""  XXX
@@ -2691,3 +2691,12 @@ VAL_ 1124 PSD_Steigung_2_Segment_ID 0 "keine_Segment_Information_vorhanden" 1 "F
 VAL_ 1124 PSD_Steigung_2_Steigung 126 "mehr_als_15_Prozent" 127 "Steigung_unbekannt";
 VAL_ 1124 PSD_Steigung_2_Vorz 0 "Gefaelle" 1 "Steigung";
 VAL_ 1124 PSD_Steigung_2_Attribute_kompl 0 "Steigungen_nicht_komplett" 1 "Steigungen_komplett";
+CM_ SG_ 299 GRA_LIM_Taste_verfuegbar "VW GRA_LIM_Taste_verfuegbar: the stalk has a limiter button. Replaces the old GRA_Typ468 (25|2) whose upper bit was really GRA_Tip_Stufe_2.";
+CM_ SG_ 299 GRA_Tip_Stufe_2 "VW GRA_Tip_Stufe_2: second tip stage of the two-stage stalk, set only together with Tip_Hoch/Tip_Runter. Was at bit 27 here, VW (V7.10-V7.25) and the MEB DBC have it at bit 26.";
+CM_ SG_ 299 GRA_ButtonTypeInfo "VW GRA_Typ_Bedienteil (27|3): stalk type. Was 28|2 here.";
+CM_ SG_ 299 GRA_TravelAssist "VW GRA_TravelAssist: Travel Assist button on the stalk. Added to the matrix in V7.20 (Nov 2017); absent on older stalks.";
+VAL_ 299 GRA_Tip_Stufe_2 0 "Tip_Stufe_1__keine_Betaetigung" 1 "Tip_Stufe_2";
+VAL_ 299 GRA_ButtonTypeInfo 0 "Init" 1 "4_Positions_Bedienteil" 2 "6_Positions_Bedienteil" 3 "8_Positions_Bedienteil" 4 "PAG_5_Positions_Bedienteil" 5 "VW_MFL_Gen2" 6 "VW_MFL_Gen3" 7 "PAG_DX1_Bedienteil";
+VAL_ 299 GRA_TravelAssist 0 "nicht_betaetigt" 1 "betaetigt";
+CM_ SG_ 919 LDW_Frueh_Spaet "VW LDW_Frueh_Spaet: the driver's early/late lane-departure warning setting. Replaces the old LDW_SW_Warnung_links/rechts (bits 14/15), which VW removed for MQB.";
+VAL_ 919 LDW_Frueh_Spaet 0 "frueh_frueh_aktiv" 1 "frueh_spaet_aktiv" 2 "spaet_spaet_aktiv" 3 "Fehler";
