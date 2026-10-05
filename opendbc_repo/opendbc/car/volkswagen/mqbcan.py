@@ -33,12 +33,18 @@ def create_eps_update(packer, bus, eps_stock_values, ea_simulated_torque):
   return packer.make_can_msg("LH_EPS_03", bus, values)
 
 
+# Experiment: while lateral control is active, draw the lane lines in the cluster's "HCCA" style instead of the plain
+# LKAS style. VW defines these as LDW_Lernmodus_seitenabhaengig (36|4) values 1-3: 1 = left on / right on,
+# 2 = left on / right warning, 3 = left warning / right on. Only used when both lines are visible and at most one
+# side is departing; every other case keeps the original on / outlined / warning codes. Set to False to revert.
+HCCA_LANE_DISPLAY = True
+
+
 def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_pressed, hud_alert, hud_control):
   values = {}
   if len(ldw_stock_values):
     values = {s: ldw_stock_values[s] for s in [
-      "LDW_SW_Warnung_links",   # Blind spot in warning mode on left side due to lane departure
-      "LDW_SW_Warnung_rechts",  # Blind spot in warning mode on right side due to lane departure
+      "LDW_Frueh_Spaet",        # Driver's early/late lane-departure warning setting (VW removed LDW_SW_Warnung_* for MQB)
       "LDW_Seite_DLCTLC",       # Direction of most likely lane departure (left or right)
       "LDW_DLC",                # Lane departure, distance to line crossing
       "LDW_TLC",                # Lane departure, time to line crossing
@@ -51,6 +57,13 @@ def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_p
     "LDW_Lernmodus_rechts": 3 if hud_control.rightLaneDepart else 1 + hud_control.rightLaneVisible,
     "LDW_Texte": hud_alert,
   })
+
+  if (HCCA_LANE_DISPLAY and lat_active and hud_control.leftLaneVisible and hud_control.rightLaneVisible
+      and not (hud_control.leftLaneDepart and hud_control.rightLaneDepart)):
+    # Combined 4-bit value = rechts + 4 * links, so values 1-3 are links = 0 and rechts = the value
+    hcca = 3 if hud_control.leftLaneDepart else 2 if hud_control.rightLaneDepart else 1
+    values.update({"LDW_Lernmodus_links": 0, "LDW_Lernmodus_rechts": hcca})
+
   return packer.make_can_msg("LDW_02", bus, values)
 
 
@@ -59,8 +72,10 @@ def create_acc_buttons_control(packer, bus, gra_stock_values, cancel=False, resu
     "GRA_Hauptschalter",           # ACC button, on/off
     "GRA_Typ_Hauptschalter",       # ACC main button type
     "GRA_Codierung",               # ACC button configuration/coding
-    "GRA_Tip_Stufe_2",             # unknown related to stalk type
-    "GRA_ButtonTypeInfo",          # unknown related to stalk type
+    "GRA_LIM_Taste_verfuegbar",    # Stalk has a limiter button
+    "GRA_Tip_Stufe_2",             # Second tip stage of the two-stage stalk
+    "GRA_ButtonTypeInfo",          # Stalk type (GRA_Typ_Bedienteil in the VW matrix)
+    "GRA_TravelAssist",            # Travel Assist button (stalks from V7.20 / Nov 2017)
   ]}
 
   values.update({

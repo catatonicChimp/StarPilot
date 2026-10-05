@@ -338,3 +338,55 @@ class TestVolkswagenMqbSetSpeedMarker:
       assert reached == bool(stock), (v, set_speed)
     assert mqbcan.set_speed_reached(False, True, 37.4, 40)
     assert not mqbcan.set_speed_reached(True, False, 40, 40)
+
+
+class TestVolkswagenMqbStalkAndLaneDisplay:
+  packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+
+  @staticmethod
+  def field(data, start, size):
+    return (int.from_bytes(bytes(data), 'little') >> start) & ((1 << size) - 1)
+
+  @staticmethod
+  def hud(depart_left=False, depart_right=False, visible_left=True, visible_right=True):
+    return SimpleNamespace(leftLaneDepart=depart_left, rightLaneDepart=depart_right,
+                           leftLaneVisible=visible_left, rightLaneVisible=visible_right)
+
+  def lane_display(self, lat_active, **kwargs):
+    stock = {"LDW_Frueh_Spaet": 2, "LDW_Seite_DLCTLC": 1, "LDW_DLC": 0.5, "LDW_TLC": 1.2}
+    data = mqbcan.create_lka_hud_control(self.packer, 0, stock, lat_active, False, 0, self.hud(**kwargs))[1]
+    return self.field(data, 36, 4), self.field(data, 14, 2)
+
+  def test_stalk_fields_copied_at_vw_positions(self):
+    # VW GRA_ACC_01: limiter button 25, tip stage 2 at 26, stalk type 27|3, Travel Assist button 30
+    stock = {"GRA_Hauptschalter": 1, "GRA_Typ_Hauptschalter": 0, "GRA_Codierung": 2, "GRA_LIM_Taste_verfuegbar": 1,
+             "GRA_Tip_Stufe_2": 1, "GRA_ButtonTypeInfo": 6, "GRA_TravelAssist": 1, "COUNTER": 4}
+    data = mqbcan.create_acc_buttons_control(self.packer, 0, stock, resume=True)[1]
+    assert [self.field(data, 25, 1), self.field(data, 26, 1), self.field(data, 27, 3), self.field(data, 30, 1)] == [1, 1, 6, 1]
+    assert self.field(data, 8, 4) == 5            # counter follows the stock frame
+    assert self.field(data, 19, 1) == 1           # resume
+    assert self.field(data, 13, 1) == 0           # cancel
+    assert self.field(data, 16, 1) == 0           # set
+
+  def test_ldw_passes_through_early_late_setting(self):
+    assert self.lane_display(True)[1] == 2
+
+  def test_hcca_lane_display(self, monkeypatch):
+    # VW LDW_Lernmodus_seitenabhaengig: 1 = HCCA left on/right on, 2 = HCCA left on/right warning, 3 = HCCA left warning/right on
+    monkeypatch.setattr(mqbcan, "HCCA_LANE_DISPLAY", True)
+    assert self.lane_display(True)[0] == 1
+    assert self.lane_display(True, depart_right=True)[0] == 2
+    assert self.lane_display(True, depart_left=True)[0] == 3
+
+  def test_hcca_falls_back_to_plain_codes(self, monkeypatch):
+    # 10 = left on/right on, 6 = left outlined/right on, 15 = both warning
+    monkeypatch.setattr(mqbcan, "HCCA_LANE_DISPLAY", True)
+    assert self.lane_display(False)[0] == 10
+    assert self.lane_display(True, visible_left=False)[0] == 6
+    assert self.lane_display(True, depart_left=True, depart_right=True)[0] == 15
+
+  def test_hcca_can_be_disabled(self, monkeypatch):
+    monkeypatch.setattr(mqbcan, "HCCA_LANE_DISPLAY", False)
+    assert self.lane_display(True)[0] == 10
+    assert self.lane_display(True, depart_right=True)[0] == 11
+    assert self.lane_display(True, depart_left=True)[0] == 14
