@@ -49,6 +49,8 @@ Only considered at 3-60 km/h with GPS accuracy ≤15 m.
 3. **Pitch:** nose-up then nose-down on the front hit, the reverse on the rear.
 4. **Low roll:** a hump lifts both wheels on an axle at once; a pothole or cover usually catches one wheel and makes the car roll. High roll lowers the score.
 5. **Driver behaviour:** slowed in the 8 s before (drop and minimum speed), then sped up again after.
+6. **Slow layer (raised sections / speed tables):** a second detector on low-frequency pitch angle and vertical movement (well below the 1 Hz band-pass) looks for a ramp up then a ramp down. Each ramp shows the front-then-rear pattern at wheelbase / v. This finds gentle tables and wide humps that make no sharp jolt, and estimates the raised section's length from the ramp-up to ramp-down distance.
+7. **Layered features merge:** a ramp up and ramp down from one raised section are one event, not two. A sharp hump inside a raised section is one event of kind `hump_on_table`, not separate events. Event kinds: `hump`, `table`, `hump_on_table`.
 
 The score is a 0-1 weighted combination with plain-English reasons (e.g. "double jolt 0.37 s apart at 25 km/h (expected 0.38), low roll, slowed 52→24"). Weights start hand-set and get tuned on known humps.
 
@@ -70,9 +72,9 @@ Event position is GPS interpolated to the front-wheel hit.
 - **Overview map** with every place as a pin coloured by confidence. Tiles come from OSM, which sends the map area to OSM's tile servers but no list of places. A plain-plot option avoids tiles entirely.
 - **One card per place or group,** sorted by confidence:
   - frame ~3 s before and frame at the hump;
-  - jolt/pitch/roll chart;
+  - jolt/pitch/roll chart, with the slow layer (pitch angle) and sharp layer (filtered jolts) shown separately;
   - flagged X of Y passes, score reasons, comma connect link.
-- **Controls:** Yes / No / Unsure, a type (hump, table, cushion, other), and notes.
+- **Controls:** Yes / No / Unsure, a type (hump, table, hump on table / combined, cushion, other), and notes.
 - **Saving:** answers save in the page, and Export writes `labels.json`. Re-runs keep earlier answers and only add new places.
 
 ## Edge cases
@@ -86,16 +88,18 @@ Event position is GPS interpolated to the front-wheel hit.
 - **Unit tests (synthetic traces):**
   - clean double jolt;
   - **back-to-back double hump** (must give two events, not a cross-pair);
+  - **shallow raised section with a sharp hump on top** (must give one `hump_on_table` event);
+  - **gentle table with no sharp jolts** (must still be found, as `table`);
   - one-wheel pothole (high roll);
   - single jolt without a rear hit;
   - noise only.
 - **Grouping:** fixed examples, including a same-pass double hump staying as two humps in one group.
 - **Export:** a fixed `labels.json` produces the expected `.osm` / GeoJSON.
-- **Real-world check:** the user's known humps near work (Tenerry Cres, Noone St, South Terrace, including the South Terrace double humps).
+- **Real-world check:** the user's known humps near work (Tenerry Cres, Noone St, South Terrace). South Terrace is a shallow raised section with a hump added on top.
 
 ## Success for version 1
 
-- Known humps appear as places flagged on most passes, near the top of the list. The South Terrace double comes out as two humps in one group.
+- Known humps appear as places flagged on most passes, near the top of the list. South Terrace comes out as one `hump_on_table` place.
 - After grouping, no more than about 2 rejected places per confirmed place.
 
 ## Not in version 1
