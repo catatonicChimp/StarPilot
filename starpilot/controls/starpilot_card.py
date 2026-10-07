@@ -31,6 +31,8 @@ from openpilot.starpilot.system.wheel_controls import (
 )
 
 HYUNDAI_MAIN_CRUISE_AOL_CONFIRM_TIMEOUT_FRAMES = 100
+# starpilotPlan updates a button press/release stays visible for: the first may have been computed before the press
+BUTTON_PRESS_HOLD_PLANS = 2
 AOL_NON_BLOCKING_IMMEDIATE_DISABLE_ALERTS = {
   f"speedTooLow/{ET.IMMEDIATE_DISABLE}",
 }
@@ -49,6 +51,14 @@ class StarPilotCard:
     button_type = getattr(button_event, "type", button_event)
     return int(getattr(button_type, "raw", button_type))
 
+  @staticmethod
+  def _latch_button_press(event: bool, plan_updated: bool, plans_left: int) -> tuple[bool, int]:
+    if event:
+      return True, BUTTON_PRESS_HOLD_PLANS
+    if plan_updated and plans_left > 0:
+      plans_left -= 1
+    return plans_left > 0, plans_left
+
   def __init__(self, CP, FPCP):
     self.CP = CP
     self.always_on_lateral_supported = always_on_lateral_available(CP)
@@ -57,6 +67,7 @@ class StarPilotCard:
     self.params_memory = Params(memory=True)
 
     self.accel_pressed = False
+    self.accel_pressed_plans = 0
     self.always_on_lateral_allowed = False
     hyundai_flags = getattr(self.CP, "flags", 0)
     self.kia_forte_non_scc = (
@@ -75,6 +86,7 @@ class StarPilotCard:
     self.prev_active = False
     self.prev_cruise_enabled = False
     self.decel_pressed = False
+    self.decel_pressed_plans = 0
     self.cancelPressed_previously = False
     self.cancel_pulse_glide_suppressed = False
     self.distancePressed_previously = False
@@ -358,11 +370,14 @@ class StarPilotCard:
     self.always_on_lateral_enabled &= not (carState.brakePressed and carState.vEgo < starpilot_toggles.always_on_lateral_pause_speed) or carState.standstill
     self.always_on_lateral_enabled &= not self.error_log.is_file()
 
-    if sm.updated["starpilotPlan"] or any(be_type in (ButtonType.accelCruise, ButtonType.resumeCruise) for be_type in button_event_types):
-      self.accel_pressed = any(be_type in (ButtonType.accelCruise, ButtonType.resumeCruise) for be_type in button_event_types)
-
-    if sm.updated["starpilotPlan"] or any(be_type == ButtonType.decelCruise for be_type in button_event_types):
-      self.decel_pressed = any(be_type == ButtonType.decelCruise for be_type in button_event_types)
+    # Hold each press/release until a planner cycle that started after it has run. The first plan after the event
+    # was usually computed from data read before it, so clearing on that plan made the planner miss most presses
+    # (e.g. speed limit confirmations).
+    plan_updated = sm.updated["starpilotPlan"]
+    accel_event = any(be_type in (ButtonType.accelCruise, ButtonType.resumeCruise) for be_type in button_event_types)
+    decel_event = any(be_type == ButtonType.decelCruise for be_type in button_event_types)
+    self.accel_pressed, self.accel_pressed_plans = self._latch_button_press(accel_event, plan_updated, self.accel_pressed_plans)
+    self.decel_pressed, self.decel_pressed_plans = self._latch_button_press(decel_event, plan_updated, self.decel_pressed_plans)
 
     self._distance_poll_counter += 1
     if self._distance_poll_counter >= 10:

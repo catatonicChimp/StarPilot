@@ -1378,3 +1378,61 @@ def test_favorite_traffic_mode_action_is_consumed_when_not_active(monkeypatch, t
 
   assert card.traffic_mode_enabled is False
   assert card._favorite_traffic_mode_counter == 1
+
+
+def _step_card(card, sm, button_events=None, plan_updated=False):
+  sm.updated["starpilotPlan"] = plan_updated
+  return card.update(make_car_state(available=True, enabled=True, button_events=button_events),
+                     SimpleNamespace(distancePressed=False), sm, make_toggles())
+
+
+@pytest.mark.parametrize(("button_type", "field"), (
+  (spc.ButtonType.accelCruise, "accelPressed"),
+  (spc.ButtonType.resumeCruise, "accelPressed"),
+  (spc.ButtonType.decelCruise, "decelPressed"),
+))
+def test_cruise_button_press_survives_plan_computed_before_it(monkeypatch, tmp_path, button_type, field):
+  # Route 00000053 (VW Golf), speed limit prompt: the planner published ~10-20 ms after each press from data read
+  # before it, the press was cleared on that plan and the confirmation was never seen
+  monkeypatch.setattr(spc, "Params", FakeParams)
+  monkeypatch.setattr(spc, "ERROR_LOGS_PATH", tmp_path)
+  card = spc.StarPilotCard(SimpleNamespace(brand="volkswagen"), SimpleNamespace(alternativeExperience=0))
+  sm = make_sm()
+
+  assert getattr(_step_card(card, sm, [SimpleNamespace(type=button_type, pressed=True)]), field) is True
+  assert getattr(_step_card(card, sm), field) is True
+  # Stale plan: computed before the press, so the press must still be visible to the next planner cycle
+  assert getattr(_step_card(card, sm, plan_updated=True), field) is True
+  for _ in range(4):
+    assert getattr(_step_card(card, sm), field) is True
+  # Plan computed after the press: it has been seen, so it is cleared
+  assert getattr(_step_card(card, sm, plan_updated=True), field) is False
+  assert getattr(_step_card(card, sm, plan_updated=True), field) is False
+
+
+def test_cruise_button_press_in_same_frame_as_plan_is_held(monkeypatch, tmp_path):
+  monkeypatch.setattr(spc, "Params", FakeParams)
+  monkeypatch.setattr(spc, "ERROR_LOGS_PATH", tmp_path)
+  card = spc.StarPilotCard(SimpleNamespace(brand="volkswagen"), SimpleNamespace(alternativeExperience=0))
+  sm = make_sm()
+
+  ret = _step_card(card, sm, [SimpleNamespace(type=spc.ButtonType.accelCruise, pressed=False)], plan_updated=True)
+  assert ret.accelPressed is True
+  assert _step_card(card, sm, plan_updated=True).accelPressed is True
+  assert _step_card(card, sm, plan_updated=True).accelPressed is False
+
+
+def test_cruise_button_new_event_restarts_hold(monkeypatch, tmp_path):
+  monkeypatch.setattr(spc, "Params", FakeParams)
+  monkeypatch.setattr(spc, "ERROR_LOGS_PATH", tmp_path)
+  card = spc.StarPilotCard(SimpleNamespace(brand="volkswagen"), SimpleNamespace(alternativeExperience=0))
+  sm = make_sm()
+
+  _step_card(card, sm, [SimpleNamespace(type=spc.ButtonType.accelCruise, pressed=True)])
+  _step_card(card, sm, plan_updated=True)
+  # Release lands before the next plan: hold restarts from the release
+  assert _step_card(card, sm, [SimpleNamespace(type=spc.ButtonType.accelCruise, pressed=False)]).accelPressed is True
+  assert _step_card(card, sm, plan_updated=True).accelPressed is True
+  assert _step_card(card, sm, plan_updated=True).accelPressed is False
+  # No events: never set, and decel is untouched by accel presses
+  assert _step_card(card, sm, plan_updated=True).decelPressed is False
