@@ -20,7 +20,7 @@ class CarState(CarStateBase):
     self.frame = 0
     self.eps_init_complete = False
     self.tsk_recovery_timer = 0
-    self.hca_autostop_timer = 0
+    self.hca_autostop_timer = -HCA_AUTOSTOP_GRACE_FRAMES  # no grace window until the first auto-stop
     self.CCP = CarControllerParams(CP)
     self.button_states = {button.event_type: False for button in self.CCP.BUTTONS}
     self.esp_hold_confirmation = False
