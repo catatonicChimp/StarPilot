@@ -1,3 +1,5 @@
+import numpy as np
+
 from opendbc.car.crc import CRC8H2F
 
 
@@ -88,7 +90,23 @@ def acc_hud_status_value(main_switch_on, acc_faulted, long_active):
   return acc_control_value(main_switch_on, acc_faulted, long_active)
 
 
-def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_control, stopping, starting, esp_hold):
+# Once ACC_Anhalten is set the ESP brings the car to a stop within ACC_Anhalteweg. A fixed short distance makes it brake
+# hard when openpilot enters stopping while still rolling (0.3 m at 5.9 km/h gave -3.3 m/s^2 for a -1.2 request). On 14
+# stock ACC stops (2016 Golf Mk7) the radar hands over at 3.4-4.2 km/h, sets the distance once and holds it (0.6-1.6 m),
+# and that distance never implies more than ~1 m/s^2 (median 0.54).
+ACC_STOPPING_DISTANCE_MIN = 0.3  # m
+ACC_STOPPING_DISTANCE_MAX = 20.46  # m, also the inactive value
+ACC_STOPPING_DECEL_MIN = 0.5  # m/s^2, gentlest stop assumed when the request is near zero
+ACC_STOPPING_DECEL_MAX = 1.0  # m/s^2, firmest stop the stock radar asks the ESP for
+
+
+def acc_stopping_distance(v_ego, accel):
+  decel = float(np.clip(-accel, ACC_STOPPING_DECEL_MIN, ACC_STOPPING_DECEL_MAX))
+  return float(np.clip(v_ego ** 2 / (2 * decel), ACC_STOPPING_DISTANCE_MIN, ACC_STOPPING_DISTANCE_MAX))
+
+
+def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_control, stopping, starting, esp_hold,
+                             stopping_distance=ACC_STOPPING_DISTANCE_MIN):
   commands = []
 
   acc_06_values = {
@@ -107,15 +125,17 @@ def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_cont
 
   if starting:
     acc_hold_type = 4  # hold release / startup
+  elif stopping:
+    # Like the stock radar: standby (3) while the ESP brings the car to a stop, then hold request (1) once it confirms
+    # the hold. Requesting the hold while still rolling makes the ESP stop abruptly.
+    acc_hold_type = 1 if esp_hold else 3
   elif esp_hold:
     acc_hold_type = 3  # hold standby
-  elif stopping:
-    acc_hold_type = 1  # hold request
   else:
     acc_hold_type = 0
 
   acc_07_values = {
-    "ACC_Anhalteweg": 0.3 if stopping else 20.46,  # Distance to stop (stopping coordinator handles terminal roll-out)
+    "ACC_Anhalteweg": stopping_distance if stopping else ACC_STOPPING_DISTANCE_MAX,  # Distance the ESP stops the car in
     "ACC_Freilauf_Info": 2 if acc_enabled else 0,
     "ACC_Folgebeschl": 3.02,  # Not using secondary controller accel unless and until we understand its impact
     "ACC_Sollbeschleunigung_02": accel if acc_enabled else 3.01,
