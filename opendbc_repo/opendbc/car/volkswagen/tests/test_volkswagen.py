@@ -4,6 +4,7 @@ import unittest
 from types import SimpleNamespace
 
 from opendbc.can import CANPacker, CANParser
+from opendbc.can.dbc import DBC as DBCParsed
 from opendbc.car import Bus, DT_CTRL, structs
 from opendbc.car.structs import CarParams
 from opendbc.car.fw_versions import match_fw_to_car, match_fw_to_car_exact
@@ -310,3 +311,44 @@ class TestVolkswagenMqbMainSwitchCancel(unittest.TestCase):
 
   def test_main_switch_untouched_with_stock_long(self):
     self.assertEqual(self._cancel_events([(0, 0), (0, 1), (0, 0)], alpha_long=False), [[], [], []])
+
+
+class TestVolkswagenMqbStopping(unittest.TestCase):
+  @staticmethod
+  def _acc_07(stopping, starting, esp_hold, **kwargs):
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+    msgs = mqbcan.create_acc_accel_control(packer, 0, 0, True, -0.5, 3, stopping, starting, esp_hold, **kwargs)
+    dat = int.from_bytes(bytes(next(m[1] for m in msgs if m[0] == 0x12E)), 'little')  # ACC_07
+    sigs = DBCParsed('vw_mqb').name_to_msg["ACC_07"].sigs
+
+    def value(name):
+      sig = sigs[name]
+      return ((dat >> sig.start_bit) & ((1 << sig.size) - 1)) * sig.factor + sig.offset
+    return value
+
+  def test_distance_matches_requested_decel(self):
+    # Stock radar: 0.82 m at 3.4 km/h with a -0.54 m/s^2 request
+    self.assertAlmostEqual(mqbcan.acc_stopping_distance(3.4 / 3.6, -0.54), 0.82, delta=0.05)
+    # Entering stopping while still rolling no longer asks the ESP to stop within 0.3 m; like the stock radar, the
+    # distance never implies more than ~1 m/s^2
+    v = 5.9 / 3.6
+    self.assertAlmostEqual(v ** 2 / (2 * mqbcan.acc_stopping_distance(v, -1.17)), mqbcan.ACC_STOPPING_DECEL_MAX, delta=0.01)
+
+  def test_distance_limits(self):
+    self.assertEqual(mqbcan.acc_stopping_distance(0., -0.55), mqbcan.ACC_STOPPING_DISTANCE_MIN)
+    self.assertEqual(mqbcan.acc_stopping_distance(30., -0.5), mqbcan.ACC_STOPPING_DISTANCE_MAX)
+    # A near-zero or positive request still assumes a gentle stop rather than an infinite distance
+    self.assertEqual(mqbcan.acc_stopping_distance(1.6, 0.2), mqbcan.acc_stopping_distance(1.6, -mqbcan.ACC_STOPPING_DECEL_MIN))
+
+  def test_distance_sent_only_while_stopping(self):
+    self.assertAlmostEqual(self._acc_07(True, False, False, stopping_distance=1.2)("ACC_Anhalteweg"), 1.2, delta=0.02)
+    self.assertAlmostEqual(self._acc_07(False, False, False, stopping_distance=1.2)("ACC_Anhalteweg"),
+                           mqbcan.ACC_STOPPING_DISTANCE_MAX, delta=0.02)
+
+  def test_hold_sequence_matches_stock(self):
+    # Stock radar: standby (3) while the ESP brings the car to a stop, hold request (1) once it confirms the hold,
+    # release (4) on drive off
+    self.assertEqual(self._acc_07(stopping=True, starting=False, esp_hold=False)("ACC_Anforderung_HMS"), 3)
+    self.assertEqual(self._acc_07(stopping=True, starting=False, esp_hold=True)("ACC_Anforderung_HMS"), 1)
+    self.assertEqual(self._acc_07(stopping=False, starting=True, esp_hold=True)("ACC_Anforderung_HMS"), 4)
+    self.assertEqual(self._acc_07(stopping=False, starting=False, esp_hold=False)("ACC_Anforderung_HMS"), 0)
