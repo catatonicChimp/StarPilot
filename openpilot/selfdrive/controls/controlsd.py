@@ -107,7 +107,8 @@ class Controls:
     optional = list(
       dict.fromkeys(
         self.longitudinal_inputs.optional_services + ['starpilotCarState', 'deviceState', 'autoSteeringLearning', 'starpilotSteeringTracking', 'pandaStates'] +
-        (['radarState'] if self.CP.brand == 'volkswagen' else [])
+        (['radarState'] if self.CP.brand == 'volkswagen' else []) +
+        (['slcState'] if self.CP.brand == 'volkswagen' and self.CP.openpilotLongitudinalControl else [])
       )
     )
     if optional:
@@ -740,6 +741,13 @@ class Controls:
 
     hudControl = CC.hudControl
     hudControl.setSpeed = float(CS.vCruiseCluster * CV.KPH_TO_MS)
+    if self.CP.brand == 'volkswagen' and self.CP.openpilotLongitudinalControl and self.sm.seen['slcState']:
+      # Show the speed openpilot is holding: an accepted speed limit below the set speed caps the planner without
+      # changing the set speed, so the cluster kept showing the old set speed. slcState's effective cluster target is
+      # already in cluster units (limit + offset, or the driver's override). Display only.
+      slc = self.sm['slcState']
+      if slc.hasEffectiveClusterTarget and 0 < slc.effectiveClusterTarget < hudControl.setSpeed:
+        hudControl.setSpeed = float(slc.effectiveClusterTarget)
     hudControl.speedVisible = CC.enabled
     hudControl.lanesVisible = CC.enabled
     hudControl.leadVisible = self.sm['longitudinalPlan'].hasLead
