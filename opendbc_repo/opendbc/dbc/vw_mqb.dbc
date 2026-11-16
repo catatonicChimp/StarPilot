@@ -1610,6 +1610,19 @@ BO_ 391 Motor_EV_01: 8 Motor_MQB_BEV
  SG_ MO_HVEM_Eskalation : 54|1@1+ (1.0,0.0) [0.0|1] ""  XXX
  SG_ MO_HVEM_MaxLeistung : 55|9@1+ (50,0) [0|25450] "Unit_Watt"  XXX
 
+BO_ 385 Kamera_SpeedLimit_01: 8 XXX
+ SG_ Status : 2|2@1+ (1,0) [0|3] ""  XXX
+ SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
+ SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+
+BO_ 668 Kamera_SpeedLimit_02: 8 XXX
+ SG_ SpeedLimit_1 : 12|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_2 : 20|4@1+ (10,0) [0|150] "km/h"  XXX
+ SG_ SpeedLimit_1_Conditional : 35|1@1+ (1,0) [0|1] ""  XXX
+ SG_ SpeedLimit_2_Conditional : 44|1@1+ (1,0) [0|1] ""  XXX
+
 CM_ SG_ 134 LWI_Lenkradwinkel "Steering angle WITH variable ratio effect included";
 CM_ SG_ 159 EPS_HCA_Status "Status of Heading Control Assist feature";
 CM_ SG_ 159 EPS_Lenkmoment "Steering input by driver, torque";
@@ -1839,3 +1852,10 @@ BO_ 891 GNSS_05: 8 XXX
 
 CM_ BO_ 879 "Taos coordinate layout decoded from CAN/GPS comparison. Only north/west coordinates and position status 3 have been validated.";
 CM_ BO_ 884 "Taos course and ground speed decoded from CAN/GPS comparison. Remaining fields are not decoded.";
+CM_ BO_ 385 "Front camera traffic sign recognition, speed limit signs as shown on the cluster. Undocumented (name is not from the VW matrix); decoded from a 2016 Golf Mk7 (AU, km/h) against map speed limits. Values seen 40-60 only, so the field width/scale above 60 is assumed.";
+CM_ SG_ 385 Status "3 once a sign has been recognised, 0 before the first sign.";
+CM_ SG_ 385 SpeedLimit_1 "Main speed limit sign, 0 = none.";
+CM_ SG_ 385 SpeedLimit_2 "Probably a second sign shown alongside the first (seen as 40 with a 50 main sign, e.g. a school zone).";
+CM_ SG_ 385 SpeedLimit_1_Conditional "Probably a supplementary plate (time/condition, e.g. school zone hours) on SpeedLimit_1.";
+CM_ SG_ 385 SpeedLimit_2_Conditional "Probably a supplementary plate on SpeedLimit_2.";
+CM_ BO_ 668 "Front camera traffic sign recognition: same signs as Kamera_SpeedLimit_01 without the status bits. Undocumented (name is not from the VW matrix).";
