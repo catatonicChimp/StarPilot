@@ -230,7 +230,7 @@ class TestVolkswagenPlatformConfigs(unittest.TestCase):
 
 class TestVolkswagenMqbMainSwitchCancel(unittest.TestCase):
   @staticmethod
-  def _cancel_events(frames, alpha_long=True):
+  def _cancel_events(frames, alpha_long=True, push_button=True):
     CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], alpha_long, False, False)
     buttons = CCP(CP).BUTTONS
     CS = CarState.__new__(CarState)
@@ -238,7 +238,8 @@ class TestVolkswagenMqbMainSwitchCancel(unittest.TestCase):
     released = ("GRA_Tip_Setzen", "GRA_Tip_Wiederaufnahme", "GRA_Tip_Hoch", "GRA_Tip_Runter", "GRA_Verstellung_Zeitluecke")
     events = []
     for abbrechen, hauptschalter in frames:
-      gra = dict.fromkeys(released, 0) | {"GRA_Abbrechen": abbrechen, "GRA_Hauptschalter": hauptschalter}
+      gra = dict.fromkeys(released, 0) | {"GRA_Abbrechen": abbrechen, "GRA_Hauptschalter": hauptschalter,
+                                              "GRA_Typ_Hauptschalter": int(push_button)}
       button_events = CS.create_button_events(SimpleNamespace(vl={"GRA_ACC_01": gra}), buttons)
       events.append([be.pressed for be in button_events if be.type == structs.CarState.ButtonEvent.Type.cancel])
     return events
@@ -249,6 +250,10 @@ class TestVolkswagenMqbMainSwitchCancel(unittest.TestCase):
 
   def test_overlapping_cancel_signals_are_one_press(self):
     self.assertEqual(self._cancel_events([(1, 0), (1, 1), (0, 1), (0, 0)]), [[True], [], [], [False]])
+
+  def test_latched_main_switch_is_not_cancel(self):
+    # A latched stalk switch holds GRA_Hauptschalter at 1 while on; the stalk's own cancel must still edge
+    self.assertEqual(self._cancel_events([(0, 1), (1, 1), (0, 1), (0, 0)], push_button=False), [[], [True], [False], []])
 
   def test_main_switch_untouched_with_stock_long(self):
     self.assertEqual(self._cancel_events([(0, 0), (0, 1), (0, 0)], alpha_long=False), [[], [], []])
