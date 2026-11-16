@@ -746,7 +746,7 @@ class Controls:
     if hudControl.leadVisible and 'radarState' in self.sm.data and self.sm.valid['radarState']:
       # Display only (VW MQB cluster lead icon): openpilot's lead distance, engaged or not
       lead_one = self.sm['radarState'].leadOne
-      if lead_one.status:
+      if lead_one.present:
         hudControl.leadDistance = float(lead_one.dRel)
     hudControl.visualAlert = self.sm['selfdriveState'].alertHudVisual
 
