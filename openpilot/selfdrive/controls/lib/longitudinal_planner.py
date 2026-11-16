@@ -18,7 +18,6 @@ from openpilot.selfdrive.controls.lib.longcontrol import LongCtrlState
 from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import (LongitudinalMpc, LongitudinalPlanSource, get_T_FOLLOW, get_jerk_factor,
                                                                                       qualified_model_leads, ModelLeadHistory, should_trigger_planner_fcw)
 from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import T_IDXS as T_IDXS_MPC
-from openpilot.selfdrive.controls.lib.longitudinal_mpc_lib.long_mpc import get_safe_obstacle_distance, get_stopped_equivalence_factor
 from openpilot.selfdrive.controls.lib.drive_helpers import CONTROL_N, get_accel_from_plan, should_stop
 from openpilot.selfdrive.car.cruise import V_CRUISE_MAX, V_CRUISE_UNSET
 from openpilot.common.swaglog import cloudlog
@@ -105,28 +104,10 @@ def get_cruise_accel(e2e, v_cruise, v_ego, a_cruise_prev, angle_steers, CP, dt, 
   return target_accel
 
 
-
-def lead_distance_ratio(lead, v_ego, mpc) -> float:
-  """Radar lead gap over the follow gap the MPC is targeting this cycle (1.0 = at target), 0 when unknown.
-
-  Display only: drives the VW MQB cluster lead icon position under openpilot longitudinal.
-  """
-  try:
-    t_follow = float(mpc.params[0, 4])
-  except (AttributeError, IndexError, TypeError, ValueError):
-    return 0.0
-  if not lead.present or not math.isfinite(t_follow) or not 0.5 <= t_follow <= 3.0:
-    return 0.0
-  desired = get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(max(float(lead.vLead), 0.0))
-  if not math.isfinite(desired) or desired <= 0.0 or not math.isfinite(lead.dRel):
-    return 0.0
-  return float(max(lead.dRel, 0.0) / desired)
-
 class LongitudinalPlanner:
   def __init__(self, CP, init_v=0.0, init_a=0.0, dt=DT_MDL, clock_ns: Callable[[], int] = time.monotonic_ns):
     self.CP = CP
     self.mpc = LongitudinalMpc(dt=dt)
-    self.lead_distance_ratio = 0.0
     self.model_lead_history = ModelLeadHistory()
     self.fcw = False
     self.dt = dt
@@ -305,8 +286,6 @@ class LongitudinalPlanner:
                     acceleration_max=acceleration_cap, faster_takeoffs=faster_takeoffs,
                     extra_stopped_gap_m=(selected_profiles.extra_stopped_gap_m if profile_eligible and selected_profiles is not None else 0.0),
                     stop_line_m=self.force_stop_plan.obstacle_m, modelV2=qualified_model_leads(sm, sample_now_ns, self.model_lead_history))
-
-    self.lead_distance_ratio = lead_distance_ratio(sm['radarState'].leadOne, v_ego, self.mpc)
 
     # MPC has selected the actual follow time for this model cycle. Its solve
     # does not use the Curve cruise cap, so a provider may now evaluate the
@@ -549,7 +528,6 @@ class LongitudinalPlanner:
     hold.forceStopBraking = bool(self.force_stop_distance_braking and self.force_stop_plan.forcing and
                                 self.force_stop_plan.should_stop)
     hold.forceStopEpisodeMonoTime = self.force_stop_plan.episode_ns
-    hold.leadDistanceRatio = float(self.lead_distance_ratio)
     pm.send('longitudinalPlan', plan_send)
     hold.departureAlertKind, hold.departureAlertMonoTime = self.departure_notifications.sample(sm, self.CP, self)
     pm.send('starpilotLongitudinalPlan', companion)
