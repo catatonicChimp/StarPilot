@@ -31,7 +31,8 @@ def create_eps_update(packer, bus, eps_stock_values, ea_simulated_torque):
   return packer.make_can_msg("LH_EPS_03", bus, values)
 
 
-def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_pressed, hud_alert, hud_control):
+def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_pressed, hud_alert, hud_control,
+                           hcca_lane_display=False):
   values = {}
   if len(ldw_stock_values):
     values = {s: ldw_stock_values[s] for s in [
@@ -49,6 +50,17 @@ def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_p
     "LDW_Lernmodus_rechts": 3 if hud_control.rightLaneDepart else 1 + hud_control.rightLaneVisible,
     "LDW_Texte": hud_alert,
   })
+
+  # While lateral control is active, draw the lane lines in the cluster's "HCCA" style instead of the plain LKAS style.
+  # VW defines these as LDW_Lernmodus_seitenabhaengig (36|4) values 1-3: 1 = left on / right on, 2 = left on / right
+  # warning, 3 = left warning / right on. Only used when both lines are visible and at most one side is departing;
+  # every other case keeps the plain on / outlined / warning codes.
+  if (hcca_lane_display and lat_active and hud_control.leftLaneVisible and hud_control.rightLaneVisible
+      and not (hud_control.leftLaneDepart and hud_control.rightLaneDepart)):
+    # Combined 4-bit value = rechts + 4 * links, so values 1-3 are links = 0 and rechts = the value
+    hcca = 3 if hud_control.leftLaneDepart else 2 if hud_control.rightLaneDepart else 1
+    values.update({"LDW_Lernmodus_links": 0, "LDW_Lernmodus_rechts": hcca})
+
   return packer.make_can_msg("LDW_02", bus, values)
 
 
