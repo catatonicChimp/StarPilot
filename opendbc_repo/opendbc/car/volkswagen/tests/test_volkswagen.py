@@ -410,3 +410,33 @@ class TestVolkswagenMqbLeadIcon(unittest.TestCase):
   def test_hud_lead_same_when_not_engaged(self):
     # The icon follows the lead the same way in standby as when engaged (route 00000042 sat at 512 in standby)
     assert self._sent_lead_distance(True, 25.0, enabled=False) == self._sent_lead_distance(True, 25.0, enabled=True)
+
+
+class TestVolkswagenMqbSetSpeedMarker(unittest.TestCase):
+  @staticmethod
+  def hud(status, reached=False):
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+    dat = int.from_bytes(bytes(mqbcan.create_acc_hud_control(packer, 0, status, 50., 0, 1, speed_reached=reached)[1]), 'little')
+    sigs = DBCParsed('vw_mqb').name_to_msg["ACC_02"].sigs
+    return tuple((dat >> sigs[name].start_bit) & 1 for name in ("ACC_Tachokranz", "ACC_Wunschgeschw_erreicht"))
+
+  def test_marker_on_while_engaged(self):
+    # Stock radar keeps the speedometer set-speed marker on while engaged (3) or overridden (4), off otherwise
+    for status in (3, 4):
+      self.assertEqual(self.hud(status)[0], 1)
+    for status in (0, 2, 6):
+      self.assertEqual(self.hud(status)[0], 0)
+    self.assertEqual(self.hud(3, reached=True)[1], 1)
+    self.assertEqual(self.hud(3)[1], 0)
+
+  def test_reached_matches_stock(self):
+    # (v_ego, set speed, stock ACC_Wunschgeschw_erreicht) from stock ACC, in order. Stock also waits ~2 s after
+    # engaging or a set speed change before setting it, which isn't modelled
+    for trace in ([(39.7, 40, 1), (39.5, 41.92, 1), (39.3, 41.92, 1), (34.6, 41.92, 0)],
+                  [(47.1, 40, 0), (45.8, 40, 0), (44.6, 49.92, 0)]):
+      reached = False
+      for v, set_speed, stock in trace:
+        reached = mqbcan.set_speed_reached(reached, True, v, set_speed)
+        self.assertEqual(reached, bool(stock), (v, set_speed))
+    self.assertTrue(mqbcan.set_speed_reached(False, True, 37.4, 40))
+    self.assertFalse(mqbcan.set_speed_reached(True, False, 40, 40))
