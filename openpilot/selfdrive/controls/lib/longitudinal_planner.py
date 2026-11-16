@@ -124,7 +124,7 @@ def lead_distance_ratio(lead, v_ego, mpc) -> float:
     t_follow = float(mpc.params[0, 4])
   except (AttributeError, IndexError, TypeError, ValueError):
     return 0.0
-  if not lead.status or not math.isfinite(t_follow) or not 0.5 <= t_follow <= 3.0:
+  if not lead.present or not math.isfinite(t_follow) or not 0.5 <= t_follow <= 3.0:
     return 0.0
   desired = get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(max(float(lead.vLead), 0.0))
   if not math.isfinite(desired) or desired <= 0.0 or not math.isfinite(lead.dRel):
