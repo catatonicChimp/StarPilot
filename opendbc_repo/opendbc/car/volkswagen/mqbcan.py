@@ -34,9 +34,11 @@ def create_eps_update(packer, bus, eps_stock_values, ea_simulated_torque):
 def create_lka_hud_control(packer, bus, ldw_stock_values, lat_active, steering_pressed, hud_alert, hud_control):
   values = {}
   if len(ldw_stock_values):
+    # Bits 14-15 are the driver's early/late lane-departure warning setting (LDW_Frueh_Spaet). VW removed the older
+    # LDW_SW_Warnung_links/rechts names for MQB; MEB, which shares this function, still uses them in its DBC
+    early_late = ["LDW_Frueh_Spaet"] if "LDW_Frueh_Spaet" in ldw_stock_values else ["LDW_SW_Warnung_links", "LDW_SW_Warnung_rechts"]
     values = {s: ldw_stock_values[s] for s in [
-      "LDW_SW_Warnung_links",   # Blind spot in warning mode on left side due to lane departure
-      "LDW_SW_Warnung_rechts",  # Blind spot in warning mode on right side due to lane departure
+      *early_late,
       "LDW_Seite_DLCTLC",       # Direction of most likely lane departure (left or right)
       "LDW_DLC",                # Lane departure, distance to line crossing
       "LDW_TLC",                # Lane departure, time to line crossing
@@ -57,8 +59,10 @@ def create_acc_buttons_control(packer, bus, gra_stock_values, cancel=False, resu
     "GRA_Hauptschalter",           # ACC button, on/off
     "GRA_Typ_Hauptschalter",       # ACC main button type
     "GRA_Codierung",               # ACC button configuration/coding
-    "GRA_Tip_Stufe_2",             # unknown related to stalk type
-    "GRA_ButtonTypeInfo",          # unknown related to stalk type
+    "GRA_LIM_Taste_verfuegbar",    # Stalk has a limiter button
+    "GRA_Tip_Stufe_2",             # Second tip stage of the two-stage stalk
+    "GRA_ButtonTypeInfo",          # Stalk type (GRA_Typ_Bedienteil in the VW matrix)
+    "GRA_TravelAssist",            # Travel Assist button (stalks from V7.20 / Nov 2017)
   ]}
 
   values.update({
