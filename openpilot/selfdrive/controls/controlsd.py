@@ -806,7 +806,7 @@ class Controls:
     hudControl.leadVisible = self.sm['longitudinalPlan'].hasLead
     hudControl.leadVisible = self.longitudinal_inputs.lead_visible(hudControl.leadVisible)
     hudControl.leadDistanceBars = self.sm['selfdriveState'].personality.raw + 1
-    if hudControl.leadVisible and 'radarState' in self.sm.data and self.sm.valid['radarState']:
+    if self.CP.brand == 'volkswagen' and hudControl.leadVisible and self.sm.valid['radarState']:
       # Display only (VW MQB cluster lead icon): openpilot's lead distance, engaged or not
       lead_one = self.sm['radarState'].leadOne
       if lead_one.present:
