@@ -471,7 +471,7 @@ class CarState(CarStateBase):
       ]
     if not CP.flags & VolkswagenFlags.MLB and CP.networkLocation == NetworkLocation.gateway:
       cam_messages += [
-        ("ACC_07", 0),  # From J428 ACC radar, logging only: optional so it can never cause a CAN error
+        ("ACC_07", float("nan")),  # From J428 ACC radar, logging only: optional (nan) so it can never cause a CAN error
       ]
 
     return {
