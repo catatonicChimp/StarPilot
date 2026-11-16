@@ -7,6 +7,7 @@ from types import SimpleNamespace
 from opendbc.can import CANPacker, CANParser
 from opendbc.can.dbc import DBC as DBCParsed
 from opendbc.car import Bus, DT_CTRL, structs
+from opendbc.car.dashboard_speed_limit import Status, parser_expiry, volkswagen_sign
 from opendbc.car.structs import CarParams
 from opendbc.car.fw_versions import match_fw_to_car, match_fw_to_car_exact
 from opendbc.car.vin import VIN_UNKNOWN
@@ -492,3 +493,31 @@ class TestVolkswagenMqbHccaLaneDisplay(unittest.TestCase):
     self.assertEqual(self.lane_display(True, hcca=False), 10)
     self.assertEqual(self.lane_display(True, hcca=False, depart_right=True), 11)
     self.assertEqual(self.lane_display(True, hcca=False, depart_left=True), 14)
+
+
+class TestVolkswagenMqbCameraSpeedLimit(unittest.TestCase):
+  def test_sign_mapping(self):
+    self.assertEqual(volkswagen_sign(3, 60, False), (Status.VALID, 60 / 3.6))
+    self.assertEqual(volkswagen_sign(3, 0, False), (Status.ABSENT, 0.0))
+    # Before the first sign, or with a supplementary plate the camera can't judge, leave it to other sources
+    self.assertEqual(volkswagen_sign(0, 50, False), (Status.UNKNOWN, 0.0))
+    self.assertEqual(volkswagen_sign(3, 40, True), (Status.UNKNOWN, 0.0))
+
+  def test_sign_feeds_dashboard_limit(self):
+    CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], False, False, False)
+    CS = CarState(CP)
+    cam_cp = CS.get_can_parsers(CP)[Bus.cam]
+    packer = CANPacker(DBC[CP.carFingerprint][Bus.pt])
+    t = 0
+    for _ in range(30):
+      t += 100_000_000
+      addr, dat, _ = packer.make_can_msg("Kamera_SpeedLimit_01", 0, {"Status": 3, "SpeedLimit_1": 80})
+      cam_cp.update([(t, [(addr, dat, CanBus(CP).cam)])])
+    # The optional message never makes the camera bus invalid, and a recognised sign reaches the tracker
+    self.assertTrue(cam_cp.can_valid)
+    timestamp, expiry = parser_expiry(cam_cp, "Kamera_SpeedLimit_01", "SpeedLimit_1")
+    sign = cam_cp.vl["Kamera_SpeedLimit_01"]
+    CS.dashboard_limit.update(timestamp, *volkswagen_sign(int(sign["Status"]), int(sign["SpeedLimit_1"]),
+                                                          bool(sign["SpeedLimit_1_Conditional"])), valid_until_ns=expiry)
+    self.assertEqual(CS.dashboard_limit.observation.status, Status.VALID)
+    self.assertAlmostEqual(CS.dashboard_limit.observation.speed_mps * 3.6, 80)
