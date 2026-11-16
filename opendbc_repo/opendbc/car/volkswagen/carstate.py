@@ -50,6 +50,8 @@ class CarState(CarStateBase):
     states: dict = {}
     for button in buttons:
       pressed = pt_cp.vl[button.can_addr][button.can_msg] in button.values
+      if button.can_msg == "GRA_Hauptschalter" and not pt_cp.vl[button.can_addr]["GRA_Typ_Hauptschalter"]:
+        pressed = False  # a latched (stalk) main switch reports on/off, not a press, and those stalks have a cancel
       states[button.event_type] = states.get(button.event_type, False) or pressed
 
     for event_type, state in states.items():
