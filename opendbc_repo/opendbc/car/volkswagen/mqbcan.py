@@ -155,6 +155,53 @@ def create_acc_accel_control(packer, bus, acc_type, acc_enabled, accel, acc_cont
   return commands
 
 
+# ACC_02.ACC_Abstandsindex on digital clusters, modelled on the stock radar (2016 Golf Mk7, stock ACC city and highway
+# driving, routes 00000006-00000026 and 00000038/39/45). The radar compares the lead distance with a reference gap of
+# ~4.2 m + 0.9 s at the current speed on a log scale, so the same distance reads closer at higher speed. It shows one of
+# 15 evenly spaced notches (34 = inside the reference gap, 101 = at it, 972 = far), never below 101 when stopped, and
+# eases from notch to notch (time constant ~0.4 s) rather than jumping; a newly found lead is placed directly.
+# openpilot's vision lead distance is noisier than the radar's, so it is smoothed before picking a notch.
+LEAD_ICON_NOTCHES = [34 + 67 * i for i in range(15)]
+LEAD_ICON_NOTCH_HYSTERESIS = 0.75  # in notches: move to a new notch only once clearly past the halfway point
+LEAD_ICON_GLIDE_TC = 0.4  # s
+LEAD_ICON_SMOOTHING_TC = 1.0  # s
+
+
+def lead_icon_position(lead_distance, v_ego):
+  # Continuous position on the radar's scale
+  position = 690 * np.log(max(lead_distance, 0.1) / (4.16 + 0.90 * v_ego)) + 118
+  position = max(position, np.interp(v_ego, [0., 15.], [101., 34.]))
+  return float(np.clip(position, LEAD_ICON_NOTCHES[0], LEAD_ICON_NOTCHES[-1]))
+
+
+class LeadIcon:
+  def __init__(self, dt):
+    self.glide = 1. - np.exp(-dt / LEAD_ICON_GLIDE_TC)
+    self.smoothing = 1. - np.exp(-dt / LEAD_ICON_SMOOTHING_TC)
+    self.notch = None
+    self.target = 0.
+    self.position = 0.
+
+  def update(self, lead_distance, v_ego):
+    if lead_distance <= 0:
+      self.notch = None
+      return 0
+
+    target = lead_icon_position(lead_distance, v_ego)
+    self.target = target if self.notch is None else self.target + self.smoothing * (target - self.target)
+    notch_step = LEAD_ICON_NOTCHES[1] - LEAD_ICON_NOTCHES[0]
+    if self.notch is None or abs(self.target - LEAD_ICON_NOTCHES[self.notch]) > LEAD_ICON_NOTCH_HYSTERESIS * notch_step:
+      new_notch = int(np.argmin([abs(self.target - n) for n in LEAD_ICON_NOTCHES]))
+      if self.notch is None:
+        self.position = LEAD_ICON_NOTCHES[new_notch]
+      self.notch = new_notch
+
+    self.position += self.glide * (LEAD_ICON_NOTCHES[self.notch] - self.position)
+    if abs(LEAD_ICON_NOTCHES[self.notch] - self.position) < 1.:
+      self.position = LEAD_ICON_NOTCHES[self.notch]  # land on the notch, as the radar does
+    return int(round(self.position))
+
+
 def create_acc_hud_control(packer, bus, acc_hud_status, set_speed, lead_distance, distance):
   values = {
     "ACC_Status_Anzeige": acc_hud_status,

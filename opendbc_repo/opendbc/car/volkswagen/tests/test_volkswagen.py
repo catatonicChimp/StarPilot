@@ -1,3 +1,4 @@
+import numpy as np
 import random
 import re
 import unittest
@@ -357,3 +358,60 @@ class TestVolkswagenMqbStopping(unittest.TestCase):
     self.assertEqual(self._acc_07(stopping=True, starting=False, esp_hold=True)("ACC_Anforderung_HMS"), 1)
     self.assertEqual(self._acc_07(stopping=False, starting=True, esp_hold=True)("ACC_Anforderung_HMS"), 4)
     self.assertEqual(self._acc_07(stopping=False, starting=False, esp_hold=False)("ACC_Anforderung_HMS"), 0)
+
+
+class TestVolkswagenMqbLeadIcon(unittest.TestCase):
+  def test_position_scale(self):
+    # At the radar's reference gap (~4.2 m + 0.9 s) the lead reads ~101; far reads at the radar's maximum
+    assert abs(mqbcan.lead_icon_position(4.16 + 0.90 * 25., 25.) - 118) < 1
+    assert mqbcan.lead_icon_position(150., 25.) == 972
+    # Stopped behind a car is never shown as inside the gap; at speed it can be
+    assert mqbcan.lead_icon_position(2., 0.) == 101
+    assert mqbcan.lead_icon_position(10., 30.) == 34
+
+  def test_position_monotonic(self):
+    # Further away reads further; the same gap at a higher speed reads closer, like the stock radar
+    positions = [mqbcan.lead_icon_position(d, 25.) for d in range(5, 150, 5)]
+    assert positions == sorted(positions)
+    assert mqbcan.lead_icon_position(40., 30.) < mqbcan.lead_icon_position(40., 15.)
+
+  def test_icon_snaps_to_notches_and_glides(self):
+    icon = mqbcan.LeadIcon(0.06)
+    first = icon.update(40., 25.)
+    assert first in mqbcan.LEAD_ICON_NOTCHES  # a new lead is placed directly on a notch
+    # Small changes in distance don't move the icon off its notch
+    for d in (39., 41., 40.5, 39.5):
+      assert icon.update(d, 25.) == first
+    # A clearly further lead moves to a further notch, easing there over a few seconds rather than jumping
+    steps = [icon.update(60., 25.) for _ in range(150)]
+    assert steps[-1] > first
+    assert steps == sorted(steps)
+    assert max(np.diff([first] + steps)) < 67 / 2  # glides, never jumps a whole notch
+    assert steps[-1] in mqbcan.LEAD_ICON_NOTCHES
+    # Losing the lead clears the icon
+    assert icon.update(0., 25.) == 0
+
+  @staticmethod
+  def _sent_lead_distance(lead_visible, lead_distance, enabled=True, upscale=True):
+    CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], True, False, False)
+    controller = CarController(DBC[CP.carFingerprint], CP)
+    controller.frame = controller.CCP.ACC_HUD_STEP * 200  # a frame that sends ACC_02, after the 1 s display delay
+    CS = SimpleNamespace(out=SimpleNamespace(gasPressed=False, standstill=False, cruiseState=SimpleNamespace(available=True),
+                                             accFaulted=False, steeringPressed=False, steeringTorque=0.0, vEgo=10.0, vEgoRaw=10.0),
+                         upscale_lead_car_signal=upscale, ldw_stock_values={}, gra_stock_values={"COUNTER": 0},
+                         acc_type=0, esp_hold_confirmation=False, eps_stock_values={}, stock_acc_lead_index=0)
+    CC = structs.CarControl(enabled=enabled, longActive=enabled)
+    CC.hudControl.leadVisible = lead_visible
+    CC.hudControl.leadDistance = lead_distance
+    sent = [d for addr, d, bus in controller.update(CC.as_reader(), CS, 0)[1] if addr == 0x30C]
+    return (int.from_bytes(bytes(sent[0]), 'little') >> 24) & 0x3FF
+
+  def test_hud_uses_openpilot_lead(self):
+    assert self._sent_lead_distance(True, 25.0) == mqbcan.LeadIcon(0.06).update(25.0, 10.0)
+    assert self._sent_lead_distance(True, 0.0) == 512  # no lead distance: fixed position as before
+    assert self._sent_lead_distance(False, 25.0) == 0
+    assert self._sent_lead_distance(True, 25.0, upscale=False) == 8  # analogue cluster scale unknown: unchanged
+
+  def test_hud_lead_same_when_not_engaged(self):
+    # The icon follows the lead the same way in standby as when engaged (route 00000042 sat at 512 in standby)
+    assert self._sent_lead_distance(True, 25.0, enabled=False) == self._sent_lead_distance(True, 25.0, enabled=True)

@@ -117,7 +117,8 @@ class Controls:
     ] + (['aolAxisState', 'aolSafetyWire'] if self.aol_replay or self.ordinary_axis_ack_required else [])
     optional = list(
       dict.fromkeys(
-        self.longitudinal_inputs.optional_services + ['starpilotCarState', 'deviceState', 'autoSteeringLearning', 'starpilotSteeringTracking', 'pandaStates']
+        self.longitudinal_inputs.optional_services + ['starpilotCarState', 'deviceState', 'autoSteeringLearning', 'starpilotSteeringTracking', 'pandaStates'] +
+        (['radarState'] if self.CP.brand == 'volkswagen' else [])
       )
     )
     if optional:
@@ -805,6 +806,11 @@ class Controls:
     hudControl.leadVisible = self.sm['longitudinalPlan'].hasLead
     hudControl.leadVisible = self.longitudinal_inputs.lead_visible(hudControl.leadVisible)
     hudControl.leadDistanceBars = self.sm['selfdriveState'].personality.raw + 1
+    if self.CP.brand == 'volkswagen' and hudControl.leadVisible and self.sm.valid['radarState']:
+      # Display only (VW MQB cluster lead icon): openpilot's lead distance, engaged or not
+      lead_one = self.sm['radarState'].leadOne
+      if lead_one.present:
+        hudControl.leadDistance = float(lead_one.dRel)
     hudControl.visualAlert = self.sm['selfdriveState'].alertHudVisual
 
     hudControl.rightLaneVisible = True
