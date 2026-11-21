@@ -201,8 +201,10 @@ class CarController(CarControllerBase):
         hud_alert = 0
         if hud_control.visualAlert in (VisualAlert.steerRequired, VisualAlert.ldw):
           hud_alert = self.CCP.LDW_MESSAGES["laneAssistTakeOver"]
+        # MQB clusters show the HCCA lane style; MEB shares mqbcan here but keeps the plain style
+        lka_kwargs = {"hcca_lane_display": True} if self.CCS is mqbcan and not self.CP.flags & VolkswagenFlags.MEB else {}
         can_sends.append(self.CCS.create_lka_hud_control(self.packer_pt, self.CAN.pt, CS.ldw_stock_values, CC.latActive,
-                                                         CS.out.steeringPressed, hud_alert, hud_control))
+                                                         CS.out.steeringPressed, hud_alert, hud_control, **lka_kwargs))
 
     if hud_control.leadDistanceBars != self.lead_distance_bars_last:
       self.distance_bar_frame = self.frame

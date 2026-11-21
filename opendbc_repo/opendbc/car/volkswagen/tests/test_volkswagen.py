@@ -470,3 +470,30 @@ class TestVolkswagenMqbKMatrix(unittest.TestCase):
     hud = SimpleNamespace(leftLaneDepart=False, rightLaneDepart=False, leftLaneVisible=True, rightLaneVisible=True)
     data = mqbcan.create_lka_hud_control(packer, 0, stock, True, False, 0, hud)[1]
     self.assertEqual(_field(data, 14, 2), 2)
+
+
+class TestVolkswagenMqbHccaLaneDisplay(unittest.TestCase):
+  @staticmethod
+  def lane_display(lat_active, hcca=True, depart_left=False, depart_right=False, visible_left=True, visible_right=True):
+    packer = CANPacker(DBC[CAR.VOLKSWAGEN_GOLF_MK7][Bus.pt])
+    hud = SimpleNamespace(leftLaneDepart=depart_left, rightLaneDepart=depart_right,
+                          leftLaneVisible=visible_left, rightLaneVisible=visible_right)
+    data = mqbcan.create_lka_hud_control(packer, 0, {}, lat_active, False, 0, hud, hcca_lane_display=hcca)[1]
+    return (int.from_bytes(bytes(data), 'little') >> 36) & 0xF
+
+  def test_hcca_lane_display(self):
+    # VW LDW_Lernmodus_seitenabhaengig: 1 = HCCA left on/right on, 2 = left on/right warning, 3 = left warning/right on
+    self.assertEqual(self.lane_display(True), 1)
+    self.assertEqual(self.lane_display(True, depart_right=True), 2)
+    self.assertEqual(self.lane_display(True, depart_left=True), 3)
+
+  def test_hcca_falls_back_to_plain_codes(self):
+    # 10 = left on/right on, 6 = left outlined/right on, 15 = both warning
+    self.assertEqual(self.lane_display(False), 10)
+    self.assertEqual(self.lane_display(True, visible_left=False), 6)
+    self.assertEqual(self.lane_display(True, depart_left=True, depart_right=True), 15)
+
+  def test_plain_codes_without_hcca(self):
+    self.assertEqual(self.lane_display(True, hcca=False), 10)
+    self.assertEqual(self.lane_display(True, hcca=False, depart_right=True), 11)
+    self.assertEqual(self.lane_display(True, hcca=False, depart_left=True), 14)
