@@ -10,7 +10,7 @@ from opendbc.car.fw_versions import match_fw_to_car, match_fw_to_car_exact
 from opendbc.car.vin import VIN_UNKNOWN
 from opendbc.car.volkswagen import mqbcan
 from opendbc.car.volkswagen.carcontroller import CarController, HCAMitigation
-from opendbc.car.volkswagen.carstate import CarState
+from opendbc.car.volkswagen.carstate import CarState, HCA_AUTOSTOP_GRACE_FRAMES
 from opendbc.car.volkswagen.interface import CarInterface
 from opendbc.car.volkswagen.values import (CAR, DBC, CanBus, CarControllerParams as CCP, FW_QUERY_CONFIG, WMI,
                                             VolkswagenFlags, VolkswagenSafetyFlags)
@@ -260,3 +260,27 @@ class TestVolkswagenMqbGasOverride(unittest.TestCase):
 
   def test_override_ends_on_disengage(self):
     self.assertEqual(self._acc_status_sequence([(True, False, True), (False, False, False), (False, False, True)]), [4, 2, 2])
+
+
+class TestVolkswagenHcaAutoStop(unittest.TestCase):
+  def _car_state(self):
+    CP = CarInterface.get_params(CAR.VOLKSWAGEN_GOLF_MK7, {bus: {} for bus in range(8)}, [], False, False, False)
+    CS = CarState(CP)
+    CS.eps_init_complete = True
+    return CS
+
+  def _perm_fault(self, CS, hca_status, engine_autostop=False):
+    CS.frame += 1
+    return CS.update_hca_state(hca_status, engine_autostop=engine_autostop)[1]
+
+  def test_fault_is_permanent_without_autostop(self):
+    CS = self._car_state()
+    self.assertTrue(self._perm_fault(CS, "FAULT"))
+
+  def test_fault_ignored_around_autostop(self):
+    CS = self._car_state()
+    self.assertFalse(self._perm_fault(CS, "FAULT", engine_autostop=True))
+    for _ in range(HCA_AUTOSTOP_GRACE_FRAMES - 1):
+      self.assertFalse(self._perm_fault(CS, "FAULT"))
+    # The grace window ends a fixed time after the engine restarts
+    self.assertTrue(self._perm_fault(CS, "FAULT"))
