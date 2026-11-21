@@ -27,7 +27,9 @@ static safety_config volkswagen_mqb_init(uint16_t param) {
 #ifdef ALLOW_DEBUG
   static const CanMsg VOLKSWAGEN_MQB_AOL_LONG_TX_MSGS[] = {
     {MSG_HCA_01, 0, 8, .check_relay = true, .disable_static_blocking = true},
-    {MSG_LDW_02, 0, 8, .check_relay = true, .disable_static_blocking = true},
+    // Temporary: keep the stock LDW_02 statically blocked. openpilot sends LDW_02 all the time, so forwarding the
+    // stock frame while openpilot doesn't own lateral put both on the cluster and made it flash.
+    {MSG_LDW_02, 0, 8, .check_relay = true},
     {MSG_LH_EPS_03, 2, 8, .check_relay = true, .disable_static_blocking = true},
     {MSG_ACC_02, 0, 8, .check_relay = true},
     {MSG_ACC_06, 0, 8, .check_relay = true},
@@ -58,8 +60,9 @@ static safety_config volkswagen_mqb_init(uint16_t param) {
   vw_aol_manual = (param == 24U) || (param == 25U);
   vw_aol_direct = (param == 40U) || (param == 41U);
   // Keep relay checks. Only replace unconditional forwarding blocks with accepted ownership.
+  // LDW_02 ([3]) stays statically blocked for now: openpilot always sends it, so forwarding the stock frame too made
+  // the cluster alternate between the two.
   VOLKSWAGEN_MQB_STOCK_TX_MSGS[0].disable_static_blocking = vw_aol_enabled;
-  VOLKSWAGEN_MQB_STOCK_TX_MSGS[3].disable_static_blocking = vw_aol_enabled;
   VOLKSWAGEN_MQB_STOCK_TX_MSGS[4].disable_static_blocking = vw_aol_enabled;
   if (vw_aol_enabled) {
     static const AolSafetyPolicy policy = {
