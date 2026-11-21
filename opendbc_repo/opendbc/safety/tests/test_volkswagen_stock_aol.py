@@ -156,5 +156,23 @@ class TestVolkswagenStockAol(unittest.TestCase):
     assert self.safety.safety_fwd_hook(2, 0x777) == 0
     self.safety.set_timer(self.time + 300_001)
     assert self.safety.aol_get_permission_mask() == 0
-    assert self.safety.safety_fwd_hook(2, 0x397) == 0
+    # The stock LDW_02 stays blocked after ownership expires: openpilot keeps sending its own, and both on the
+    # cluster made it flash
+    assert self.safety.safety_fwd_hook(2, 0x397) == -1
     assert self.safety.safety_fwd_hook(0, 0x9F) == 2
+
+  def test_stock_ldw_always_blocked(self):
+    # Stock and openpilot longitudinal AOL: the stock LDW_02 never reaches the cluster, owned or not, while HCA_01
+    # still follows ownership
+    for word in (8, 9):
+      self.configure(word)
+      assert self.safety.safety_fwd_hook(2, 0x397) == -1
+      assert self.safety.safety_fwd_hook(2, 0x126) == 0
+      self.arm()
+      assert self.safety.safety_tx_hook(self.packet('HCA_01', {'HCA_01_LM_Offset': 4, 'HCA_01_Sendestatus': 1}))
+      assert self.safety.safety_tx_hook(self.packet('LDW_02', {}))
+      assert self.safety.safety_fwd_hook(2, 0x397) == -1
+      assert self.safety.safety_fwd_hook(2, 0x126) == -1
+      self.safety.set_timer(self.time + 300_001)
+      assert self.safety.safety_fwd_hook(2, 0x397) == -1
+      assert self.safety.safety_fwd_hook(2, 0x126) == 0
