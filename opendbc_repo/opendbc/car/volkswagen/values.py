@@ -175,6 +175,11 @@ class CarControllerParams:
           Button(structs.CarState.ButtonEvent.Type.cancel, "GRA_ACC_01", "GRA_Abbrechen", [1]),
           Button(structs.CarState.ButtonEvent.Type.gapAdjustCruise, "GRA_ACC_01", "GRA_Verstellung_Zeitluecke", [1, 3]),
         ]
+        if CP.openpilotLongitudinalControl:
+          # Under openpilot long nothing acts on the main switch (O/I): the stock radar that would switch ACC off is
+          # replaced, and MFL wheels with ACC and a limiter (mode) button have no cancel button. Treat an O/I press
+          # as cancel; Set/Resume re-engage. Only push-button switches count (GRA_Typ_Hauptschalter, see carstate).
+          self.BUTTONS.append(Button(structs.CarState.ButtonEvent.Type.cancel, "GRA_ACC_01", "GRA_Hauptschalter", [1]))
 
       self.LDW_MESSAGES = {
         "none": 0,                            # Nothing to display
