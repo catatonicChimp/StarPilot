@@ -73,6 +73,19 @@ def toyota_sign(sign: int, speed: int) -> tuple[Status, float]:
   return (Status.ABSENT, 0.0) if sign == 0 or (sign in (1, 36) and speed == 255) else (Status.UNKNOWN, 0.0)
 
 
+def volkswagen_sign(status: int, speed_kph: int, conditional: bool) -> tuple[Status, float]:
+  # Kamera_SpeedLimit_01 from the MQB front camera's sign recognition: status 3 once a sign has been read, 0 before.
+  # Signs with a supplementary plate (e.g. school zone hours) are left to other sources, since the camera can't
+  # tell whether they apply. Decoded on km/h cars only.
+  if status != 3:
+    return Status.UNKNOWN, 0.0
+  if conditional:
+    return Status.UNKNOWN, 0.0
+  if 1 <= speed_kph <= 150:
+    return Status.VALID, speed_kph / 3.6
+  return (Status.ABSENT, 0.0) if speed_kph == 0 else (Status.UNKNOWN, 0.0)
+
+
 def ford_sign(speed: int, unit: int) -> tuple[Status, float]:
   if 1 <= speed <= 250 and unit in (1, 2):
     return Status.VALID, speed * (1 / 3.6 if unit == 1 else 0.44704)

@@ -3,6 +3,7 @@ from opendbc.can import CANParser
 from opendbc.car import Bus, structs
 from opendbc.car.interfaces import CarStateBase
 from opendbc.car.common.conversions import Conversions as CV
+from opendbc.car.dashboard_speed_limit import Tracker as LimitTracker, parser_expiry, volkswagen_sign
 from opendbc.car.volkswagen.values import DBC, CanBus, NetworkLocation, TransmissionType, GearShifter, \
                                                       CarControllerParams, VolkswagenFlags
 
@@ -16,6 +17,7 @@ class CarState(CarStateBase):
   def __init__(self, CP):
     super().__init__(CP)
     self.car_gps_tracker = CarGpsTracker(CP)
+    self.dashboard_limit = LimitTracker()
     self.car_gps_supported = self.car_gps_tracker.config is not None
     self.frame = 0
     self.eps_init_complete = False
@@ -169,6 +171,13 @@ class CarState(CarStateBase):
     if self.CP.networkLocation == NetworkLocation.gateway:
       self.stock_acc_lead_index = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
       self.stock_acc_follow_accel = float(cam_cp.vl["ACC_07"]["ACC_Folgebeschl"])
+
+    # Speed limit sign read by the front camera's traffic sign recognition (only on cars that have it: optional)
+    timestamp, expiry = parser_expiry(cam_cp, "Kamera_SpeedLimit_01", "SpeedLimit_1")
+    if timestamp > self.dashboard_limit.observation.observed_ns:
+      sign = cam_cp.vl["Kamera_SpeedLimit_01"]
+      status, value_mps = volkswagen_sign(int(sign["Status"]), int(sign["SpeedLimit_1"]), bool(sign["SpeedLimit_1_Conditional"]))
+      self.dashboard_limit.update(timestamp, status, value_mps, valid_until_ns=expiry)
 
     self.frame += 1
     return ret
@@ -474,6 +483,10 @@ class CarState(CarStateBase):
     if not CP.flags & VolkswagenFlags.MLB and CP.networkLocation == NetworkLocation.gateway:
       cam_messages += [
         ("ACC_07", float("nan")),  # From J428 ACC radar, logging only: optional (nan) so it can never cause a CAN error
+      ]
+    if not CP.flags & VolkswagenFlags.MLB:
+      cam_messages += [
+        ("Kamera_SpeedLimit_01", float("nan")),  # From R242 front camera, only on cars with sign recognition: optional
       ]
 
     return {
