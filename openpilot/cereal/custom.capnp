@@ -222,6 +222,8 @@ struct StarPilotCarState @0xf35cc4560bbf6ec2 {
   feedbackPublication @37 :FeedbackPublication;
   steeringLimitInfo @39 :StarPilotCarControl.SteeringLimitInfo;
   toyotaCruise @38 :ToyotaCruise;
+  stockAccLeadIndex @40 :UInt16;  # VW MQB gateway: radar's own ACC_02.ACC_Abstandsindex, 0 = no radar target
+  stockAccFollowAccel @41 :Float32;  # VW MQB gateway: radar's own ACC_07.ACC_Folgebeschl (m/s^2, 3.02 = inactive)
 
   struct ToyotaCruise {
     version @0 :UInt16;

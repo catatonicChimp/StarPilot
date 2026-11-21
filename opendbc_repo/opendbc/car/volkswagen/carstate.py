@@ -21,6 +21,8 @@ class CarState(CarStateBase):
     self.eps_init_complete = False
     self.tsk_recovery_timer = 0
     self.hca_autostop_timer = -HCA_AUTOSTOP_GRACE_FRAMES  # no grace window until the first auto-stop
+    self.stock_acc_lead_index = None
+    self.stock_acc_follow_accel = None
     self.CCP = CarControllerParams(CP)
     self.button_states = {button.event_type: False for button in self.CCP.BUTTONS}
     self.esp_hold_confirmation = False
@@ -161,6 +163,12 @@ class CarState(CarStateBase):
     ret.buttonEvents = self.create_button_events(pt_cp, self.CCP.BUTTONS)
 
     ret.lowSpeedAlert = self.update_low_speed_alert(ret.vEgo)
+
+    # With the gateway harness, the camera-side bus carries the radar's own ACC messages untouched
+    # (openpilot longitudinal replaces ACC_02/ACC_07 on the gateway side only). Logging only.
+    if self.CP.networkLocation == NetworkLocation.gateway:
+      self.stock_acc_lead_index = int(cam_cp.vl["ACC_02"]["ACC_Abstandsindex"])
+      self.stock_acc_follow_accel = float(cam_cp.vl["ACC_07"]["ACC_Folgebeschl"])
 
     self.frame += 1
     return ret
@@ -462,6 +470,10 @@ class CarState(CarStateBase):
     if CP.flags & VolkswagenFlags.STOCK_HCA_PRESENT:
       cam_messages += [
         ("HCA_01", 1),  # From R242 Driver assistance camera, 50Hz if steering/1Hz if not
+      ]
+    if not CP.flags & VolkswagenFlags.MLB and CP.networkLocation == NetworkLocation.gateway:
+      cam_messages += [
+        ("ACC_07", float("nan")),  # From J428 ACC radar, logging only: optional (nan) so it can never cause a CAN error
       ]
 
     return {
